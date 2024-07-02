@@ -34,9 +34,9 @@ export default function Sidebar() {
       theme={{
         components: {
           Menu: {
-            itemSelectedBg: '#DBF9F3',
+            itemSelectedBg: '#c6d3ff',
             itemHeight: 46,
-            itemActiveBg: '#DBF9F3',
+            itemActiveBg: '#c6d3ff',
             itemPaddingInline: 100,
             itemBorderRadius: 0,
             itemMarginInline: 0,
@@ -54,13 +54,12 @@ export default function Sidebar() {
         theme="light"
         collapsed={screen.availWidth < 800}
         collapsedWidth={70}
-        className="[&_.ant-menu-item-selected]:!text-teal [&_.ant-menu-item]:text-secondary h-screen overflow-hidden [&_.ant-menu-item-icon]:flex [&_.ant-menu-item-icon]:!w-5 [&_.ant-menu-item-icon]:justify-center"
+        className="[&_.ant-menu-item]:text-secondary h-screen overflow-hidden [&_.ant-menu-item-icon]:flex [&_.ant-menu-item-icon]:!w-5 [&_.ant-menu-item-icon]:justify-center [&_.ant-menu-item-selected]:!text-black"
       >
         <div className="flex h-16 items-center justify-center">
           <img src={NNC} alt="spruce_logo" className="flex w-32 " />
         </div>
         <div className="no-scrollbar h-[calc(100vh-120px)] overflow-auto border-0 border-t-2 border-solid border-[#f5f5f5] font-light">
-          <p className="text-red-500">test</p>
           <SPMenu
             selectedKeys={[locationKey]}
             defaultOpenKeys={openParent(locationKey)}

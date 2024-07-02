@@ -5,11 +5,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#045D65',
+        primary: '#001E80',
         secondary: '#535353',
-        teal: '#177363',
+        teal: '#c6d3ff',
         sp_gray: '#444444',
-        tealv1: '#61C08D',
+        tealv1: '#afc2ff',
         text_primary: '#4D4D4D',
         heading: '#535353',
         button_bg: '#F3F0F0',
