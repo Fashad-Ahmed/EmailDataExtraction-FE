@@ -1,14 +1,14 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 
 import _ from 'lodash';
 import SPHeader from '@/components/atoms/sp-header';
-import SPDropdown from '@/components/atoms/sp-dropdown';
-import DropdownMenu from '../dropdown-menu';
-import SPSwitch from '@/components/atoms/sp-switch';
+import SPButton from '@/components/atoms/sp-button';
+import { GoogleIcon } from '@/assets/svgs';
+import SPLabel from '@/components/atoms/sp-label';
 
 export default function Header() {
-  const [notificationVisible, setNotificationVisible] =
-    useState<boolean>(false);
+  // const [notificationVisible, setNotificationVisible] =
+  //   useState<boolean>(false);
 
   return (
     <SPHeader
@@ -137,6 +137,11 @@ export default function Header() {
             />
           </Link>
         </SPDropdown> */}
+
+        <SPButton className="flex max-w-[700px] flex-row items-center ">
+          <GoogleIcon />
+          <SPLabel className="ml-2 text-base">Sign In With Google</SPLabel>
+        </SPButton>
       </div>
       <div className="flex items-center justify-between gap-3"></div>
     </SPHeader>

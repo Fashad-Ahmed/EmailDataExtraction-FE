@@ -24,7 +24,9 @@ export default function Card({
   children,
 }: CardProps) {
   return (
-    <SPContainer className={cn('flex flex-col gap-5', containerclassName)}>
+    <SPContainer
+      className={cn('m-2 flex flex-col gap-5 shadow-md', containerclassName)}
+    >
       {heading && (
         <ActionHeading
           heading={heading}
