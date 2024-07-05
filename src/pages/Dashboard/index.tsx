@@ -2,71 +2,129 @@ import Stats from '@/components/molecules/stats';
 import Card from '@/components/organisms/card';
 import HighchartsReact from 'highcharts-react-official';
 import * as Highcharts from 'highcharts';
+import useGetApi from '@/hooks/useGetApi';
 
-export const chartOptions: Highcharts.Options = {
-  chart: {
-    type: 'pie',
-    renderTo: 'container',
-  },
-  title: {
-    text: 'Sample Circular Chart',
-  },
-  credits: {
-    enabled: false,
-  },
-  series: [
-    {
-      name: 'Browser share',
-      data: [
-        ['Firefox', 45.0],
-        ['IE', 26.8],
-        ['Chrome', 12.8],
-        ['Safari', 8.5],
-        ['Opera', 6.2],
-        ['Others', 0.7],
-      ],
-      type: 'pie',
-    },
-  ],
-};
+function calculateStats(statsResponseData: any) {
+  const totalProducts = statsResponseData?.reduce(
+    (acc: any, curr: { noOfProducts: any }) => acc + curr?.noOfProducts,
+    0
+  );
+  const avgProductsPerSupplier = totalProducts / statsResponseData?.length;
+  const sortedSuppliers = [...statsResponseData]?.sort(
+    (a, b) => b?.noOfProducts - a?.noOfProducts
+  );
+
+  return {
+    totalProducts,
+    avgProductsPerSupplier,
+    topSupplier: sortedSuppliers[0],
+    bottomSupplier: sortedSuppliers[sortedSuppliers.length - 1],
+  };
+}
 
 export default function Dashboard() {
+  const {
+    data: statsResponse,
+    // isLoading,
+  } = useGetApi<any>({
+    key: ['/public/dashboard'],
+    url: `/public/dashboard`,
+  });
+
+  // const statsResponseData = statsResponse?.data;
+
+  const statsResponseData = [
+    {
+      supplierName: 'A',
+      noOfProducts: 4,
+    },
+    {
+      supplierName: 'B',
+      noOfProducts: 1,
+    },
+    {
+      supplierName: 'D',
+      noOfProducts: 1,
+    },
+    {
+      supplierName: 'E',
+      noOfProducts: 1,
+    },
+    {
+      supplierName: 'G',
+      noOfProducts: 1,
+    },
+    {
+      supplierName: 'ophycare',
+      noOfProducts: 3,
+    },
+  ];
+  console.log({ statsResponseData });
+
+  const { totalProducts, avgProductsPerSupplier, topSupplier, bottomSupplier } =
+    calculateStats(statsResponseData);
+
+  console.log(
+    { totalProducts },
+    { avgProductsPerSupplier },
+    { topSupplier },
+    { bottomSupplier }
+  );
+
+  const chartOptions: Highcharts.Options = {
+    chart: {
+      type: 'pie',
+      renderTo: 'container',
+    },
+    title: {
+      text: 'Supplier Product Count',
+    },
+    credits: {
+      enabled: false,
+    },
+    series: [
+      {
+        name: 'Product Count',
+        data: statsResponseData.map(
+          (item: { supplierName: any; noOfProducts: any }) => ({
+            name: item?.supplierName,
+            y: item?.noOfProducts,
+          })
+        ),
+        type: 'pie',
+      },
+    ],
+  };
+
   return (
     <Card heading="Stats">
       <div className="grid grid-cols-1 gap-5">
         <div className="grid  grid-cols-1 gap-5 md:grid-cols-3">
           <Stats.Group
+            heading="Suppliers"
             className="md:col-span-2"
-            heading="Bookings"
             stats={[
               {
-                label: 'Total Bookings',
-                value: '3,654',
+                label: 'Average Products Per Supplier',
+                value: avgProductsPerSupplier?.toFixed(2) ?? 0,
               },
               {
-                label: 'In Progress',
-                value: '190',
+                label: 'Top Supplier',
+                value: `${topSupplier?.supplierName} (${topSupplier?.noOfProducts})`,
               },
+
               {
-                label: 'Upcoming',
-                value: '300',
-              },
-              {
-                label: 'Completed',
-                value: '3,164',
+                label: 'Bottom Supplier',
+                value: `${bottomSupplier?.supplierName} (${bottomSupplier?.noOfProducts})`,
               },
             ]}
           />
           <Stats.Group
-            heading="Profit"
+            heading="Products"
             stats={[
               {
-                label: 'Total Revenue',
-                value: '$1144.00',
-              },
-              {
-                label: 'Total Profits',
-                value: '$540.00',
+                label: 'Total Products',
+                value: totalProducts ?? 0,
               },
             ]}
           />
