@@ -23,23 +23,38 @@ export default function Stats({ label, value }: StatsProps) {
   );
 }
 
+/**
+ * A component to display a group of statistics.
+ *
+ * @param heading - The heading of the group.
+ * @param stats - An array of StatsProps objects representing the statistics to be displayed.
+ * @param className - An optional CSS class name to apply to the container.
+ *
+ * @returns A React component that renders a group of statistics.
+ */
+
 Stats.Group = function StatsGroup({
   heading,
   stats,
   className,
 }: StatsGroupProps) {
   return (
-    <SPContainer className={cn('grid grid-cols-1 gap-4 p-8 ', className)}>
-      <SPLabel className="text-xl font-medium text-secondary">
+    <SPContainer
+      className={cn(
+        'grid grid-cols-1 gap-6 rounded-lg bg-white p-8 shadow-md',
+        className
+      )}
+    >
+      <SPLabel className="mb-4 text-2xl font-semibold text-primary">
         {heading}
       </SPLabel>
-      <div className="grid auto-cols-auto grid-flow-col divide-x divide-y-0 divide-solid divide-gray-200 overflow-x-auto ">
-        {stats.map((stat, index) => (
-          <div className="min-w-32 pl-8 first:pl-0" key={index}>
-            <SPLabel className="font-medium text-secondary">
+      <div className="grid grid-cols-1 gap-4 overflow-x-auto md:grid-cols-2 lg:grid-cols-3">
+        {stats?.map((stat, index) => (
+          <div className="min-w-max rounded-lg bg-gray-100 p-4" key={index}>
+            <SPLabel className="mb-2 text-sm font-medium text-gray-500">
               {stat.label}
             </SPLabel>
-            <SPLabel className="text-lg font-bold text-primary">
+            <SPLabel className="ttext-primary text-lg font-bold">
               {stat.value}
             </SPLabel>
           </div>

@@ -2,71 +2,106 @@ import Stats from '@/components/molecules/stats';
 import Card from '@/components/organisms/card';
 import HighchartsReact from 'highcharts-react-official';
 import * as Highcharts from 'highcharts';
+import useGetApi from '@/hooks/useGetApi';
+import { Spin } from 'antd';
 
-export const chartOptions: Highcharts.Options = {
-  chart: {
-    type: 'pie',
-    renderTo: 'container',
-  },
-  title: {
-    text: 'Sample Circular Chart',
-  },
-  credits: {
-    enabled: false,
-  },
-  series: [
-    {
-      name: 'Browser share',
-      data: [
-        ['Firefox', 45.0],
-        ['IE', 26.8],
-        ['Chrome', 12.8],
-        ['Safari', 8.5],
-        ['Opera', 6.2],
-        ['Others', 0.7],
-      ],
-      type: 'pie',
-    },
-  ],
-};
+/**
+ * Dashboard component to display statistics and charts based on supplier data.
+ *
+ * @returns {React.ReactElement} - The Dashboard component.
+ */
 
 export default function Dashboard() {
+  const { data: statsResponse, isLoading } = useGetApi<any>({
+    key: ['/public/dashboard'],
+    url: `/public/dashboard`,
+  });
+
+  const statsResponseData = statsResponse ?? [];
+
+  const { totalProducts, avgProductsPerSupplier, topSupplier, bottomSupplier } =
+    calculateStats(statsResponseData);
+
+  const chartOptions: Highcharts.Options = {
+    chart: {
+      type: 'pie',
+      renderTo: 'container',
+    },
+    title: {
+      text: 'Supplier Product Count',
+    },
+    credits: {
+      enabled: false,
+    },
+    plotOptions: {
+      pie: {
+        colors: [
+          '#001E80',
+          '#003F9C',
+          '#0066CC',
+          '#0088EE',
+          '#00AAAA',
+          '#00CCCC',
+          '#00EEEE',
+        ],
+      },
+    },
+    series: [
+      {
+        name: 'Product Count',
+        data: statsResponseData.map(
+          (item: { supplierName: any; noOfProducts: any }) => ({
+            name: item?.supplierName,
+            y: item?.noOfProducts,
+          })
+        ),
+        type: 'pie',
+      },
+    ],
+  };
+
+  if (isLoading)
+    return (
+      <div className="flex h-screen w-full flex-1 items-center justify-center bg-white">
+        <Spin size="large" spinning={true} />
+      </div>
+    );
+
   return (
     <Card heading="Stats">
       <div className="grid grid-cols-1 gap-5">
         <div className="grid  grid-cols-1 gap-5 md:grid-cols-3">
           <Stats.Group
+            heading="Suppliers"
             className="md:col-span-2"
-            heading="Bookings"
             stats={[
               {
-                label: 'Total Bookings',
-                value: '3,654',
+                label: 'Average Products Per Supplier',
+                value: avgProductsPerSupplier?.toFixed(2) ?? 0,
               },
               {
-                label: 'In Progress',
-                value: '190',
+                label: 'Top Supplier',
+                value:
+                  topSupplier?.supplierName && topSupplier?.noOfProducts
+                    ? `${topSupplier?.supplierName} (${topSupplier?.noOfProducts})`
+                    : 'N/A',
               },
+
               {
-                label: 'Upcoming',
-                value: '300',
-              },
-              {
-                label: 'Completed',
-                value: '3,164',
+                label: 'Bottom Supplier',
+                value:
+                  topSupplier?.supplierName && topSupplier?.noOfProducts
+                    ? `${bottomSupplier?.supplierName} (${bottomSupplier?.noOfProducts})`
+                    : 'N/A',
               },
             ]}
           />
           <Stats.Group
-            heading="Profit"
+            heading="Products"
             stats={[
               {
-                label: 'Total Revenue',
-                value: '$1144.00',
-              },
-              {
-                label: 'Total Profits',
-                value: '$540.00',
+                label: 'Total Products',
+                value: totalProducts ?? 0,
               },
             ]}
           />
@@ -84,4 +119,45 @@ export default function Dashboard() {
       </div>
     </Card>
   );
+}
+
+/**
+ * Calculates and returns statistics based on the given supplier data.
+ *
+ * @param statsResponseData - An array of supplier data objects. Each object should have properties: supplierName and noOfProducts.
+ * @returns An object containing calculated statistics: totalProducts, avgProductsPerSupplier, topSupplier, and bottomSupplier.
+ *
+ * @remarks
+ * If the input array is empty or not an array, the function will return default values:
+ * - totalProducts: 0
+ * - avgProductsPerSupplier: 0
+ * - topSupplier: null
+ * - bottomSupplier: null
+ */
+
+function calculateStats(statsResponseData: any) {
+  if (!Array.isArray(statsResponseData) || statsResponseData.length === 0) {
+    return {
+      totalProducts: 0,
+      avgProductsPerSupplier: 0,
+      topSupplier: null,
+      bottomSupplier: null,
+    };
+  }
+
+  const totalProducts = statsResponseData?.reduce(
+    (acc: any, curr: { noOfProducts: any }) => acc + curr?.noOfProducts,
+    0
+  );
+  const avgProductsPerSupplier = totalProducts / statsResponseData?.length;
+  const sortedSuppliers = [...statsResponseData]?.sort(
+    (a, b) => b?.noOfProducts - a?.noOfProducts
+  );
+
+  return {
+    totalProducts,
+    avgProductsPerSupplier,
+    topSupplier: sortedSuppliers[0],
+    bottomSupplier: sortedSuppliers[sortedSuppliers.length - 1],
+  };
 }

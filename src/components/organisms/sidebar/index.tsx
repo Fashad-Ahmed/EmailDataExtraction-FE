@@ -6,6 +6,13 @@ import SPMenu from '@/components/atoms/sp-menu';
 import SPSider from '@/components/atoms/sp-sider';
 import { NNC } from '@/assets/images';
 
+/**
+ * Sidebar component for the application.
+ * It renders the sidebar menu and handles navigation.
+ *
+ * @returns {React.FC} - Sidebar component
+ */
+
 export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,7 +61,7 @@ export default function Sidebar() {
         theme="light"
         collapsed={screen.availWidth < 800}
         collapsedWidth={70}
-        className="[&_.ant-menu-item]:text-secondary h-screen overflow-hidden [&_.ant-menu-item-icon]:flex [&_.ant-menu-item-icon]:!w-5 [&_.ant-menu-item-icon]:justify-center [&_.ant-menu-item-selected]:!text-black"
+        className="h-screen overflow-hidden [&_.ant-menu-item-icon]:flex [&_.ant-menu-item-icon]:!w-5 [&_.ant-menu-item-icon]:justify-center [&_.ant-menu-item-selected]:!text-black [&_.ant-menu-item]:text-secondary"
       >
         <div className="flex h-16 items-center justify-center">
           <img src={NNC} alt="spruce_logo" className="flex w-32 " />
