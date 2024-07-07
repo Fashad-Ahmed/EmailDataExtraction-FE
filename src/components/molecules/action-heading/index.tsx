@@ -15,6 +15,13 @@ export interface ActionHeadingProps {
   onBack?: () => void;
 }
 
+/**
+ * A reusable component for displaying a heading with optional actions and back button.
+ *
+ * @param props - The props for the ActionHeading component.
+ * @returns - A JSX element representing the ActionHeading component.
+ */
+
 export default function ActionHeading({
   actions,
   leftChildren,

@@ -4,6 +4,23 @@ import { Table, TableProps } from 'antd';
 
 export interface SPTableProps extends TableProps {}
 
+/**
+ * A custom Switch component with additional props and type definition.
+ *
+ * @param props - The props for the SPSwitch component.
+ * @param props.children - The children to be rendered inside the Switch.
+ * @param props.otherProps - Other props that the Switch component accepts.
+ *
+ * @returns - A Switch component with the provided props.
+ *
+ * @example
+ * ```
+ * <SPSwitch checked={true} onChange={handleSwitchChange}>
+ *   Custom Switch
+ * </SPSwitch>
+ * ```
+ */
+
 export default function SPTable({
   children,
   scroll,

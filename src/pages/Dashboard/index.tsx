@@ -3,73 +3,24 @@ import Card from '@/components/organisms/card';
 import HighchartsReact from 'highcharts-react-official';
 import * as Highcharts from 'highcharts';
 import useGetApi from '@/hooks/useGetApi';
+import { Spin } from 'antd';
 
-function calculateStats(statsResponseData: any) {
-  const totalProducts = statsResponseData?.reduce(
-    (acc: any, curr: { noOfProducts: any }) => acc + curr?.noOfProducts,
-    0
-  );
-  const avgProductsPerSupplier = totalProducts / statsResponseData?.length;
-  const sortedSuppliers = [...statsResponseData]?.sort(
-    (a, b) => b?.noOfProducts - a?.noOfProducts
-  );
-
-  return {
-    totalProducts,
-    avgProductsPerSupplier,
-    topSupplier: sortedSuppliers[0],
-    bottomSupplier: sortedSuppliers[sortedSuppliers.length - 1],
-  };
-}
+/**
+ * Dashboard component to display statistics and charts based on supplier data.
+ *
+ * @returns {React.ReactElement} - The Dashboard component.
+ */
 
 export default function Dashboard() {
-  const {
-    data: statsResponse,
-    // isLoading,
-  } = useGetApi<any>({
+  const { data: statsResponse, isLoading } = useGetApi<any>({
     key: ['/public/dashboard'],
     url: `/public/dashboard`,
   });
 
-  // const statsResponseData = statsResponse?.data;
-
-  const statsResponseData = [
-    {
-      supplierName: 'A',
-      noOfProducts: 4,
-    },
-    {
-      supplierName: 'B',
-      noOfProducts: 1,
-    },
-    {
-      supplierName: 'D',
-      noOfProducts: 1,
-    },
-    {
-      supplierName: 'E',
-      noOfProducts: 1,
-    },
-    {
-      supplierName: 'G',
-      noOfProducts: 1,
-    },
-    {
-      supplierName: 'ophycare',
-      noOfProducts: 3,
-    },
-  ];
-  console.log({ statsResponseData });
+  const statsResponseData = statsResponse ?? [];
 
   const { totalProducts, avgProductsPerSupplier, topSupplier, bottomSupplier } =
     calculateStats(statsResponseData);
-
-  console.log(
-    { totalProducts },
-    { avgProductsPerSupplier },
-    { topSupplier },
-    { bottomSupplier }
-  );
 
   const chartOptions: Highcharts.Options = {
     chart: {
@@ -81,6 +32,19 @@ export default function Dashboard() {
     },
     credits: {
       enabled: false,
+    },
+    plotOptions: {
+      pie: {
+        colors: [
+          '#001E80',
+          '#003F9C',
+          '#0066CC',
+          '#0088EE',
+          '#00AAAA',
+          '#00CCCC',
+          '#00EEEE',
+        ],
+      },
     },
     series: [
       {
@@ -96,6 +60,13 @@ export default function Dashboard() {
     ],
   };
 
+  if (isLoading)
+    return (
+      <div className="flex h-screen w-full flex-1 items-center justify-center bg-white">
+        <Spin size="large" spinning={true} />
+      </div>
+    );
+
   return (
     <Card heading="Stats">
       <div className="grid grid-cols-1 gap-5">
@@ -110,12 +81,18 @@ export default function Dashboard() {
               },
               {
                 label: 'Top Supplier',
-                value: `${topSupplier?.supplierName} (${topSupplier?.noOfProducts})`,
+                value:
+                  topSupplier?.supplierName && topSupplier?.noOfProducts
+                    ? `${topSupplier?.supplierName} (${topSupplier?.noOfProducts})`
+                    : 'N/A',
               },
 
               {
                 label: 'Bottom Supplier',
-                value: `${bottomSupplier?.supplierName} (${bottomSupplier?.noOfProducts})`,
+                value:
+                  topSupplier?.supplierName && topSupplier?.noOfProducts
+                    ? `${bottomSupplier?.supplierName} (${bottomSupplier?.noOfProducts})`
+                    : 'N/A',
               },
             ]}
           />
@@ -142,4 +119,45 @@ export default function Dashboard() {
       </div>
     </Card>
   );
+}
+
+/**
+ * Calculates and returns statistics based on the given supplier data.
+ *
+ * @param statsResponseData - An array of supplier data objects. Each object should have properties: supplierName and noOfProducts.
+ * @returns An object containing calculated statistics: totalProducts, avgProductsPerSupplier, topSupplier, and bottomSupplier.
+ *
+ * @remarks
+ * If the input array is empty or not an array, the function will return default values:
+ * - totalProducts: 0
+ * - avgProductsPerSupplier: 0
+ * - topSupplier: null
+ * - bottomSupplier: null
+ */
+
+function calculateStats(statsResponseData: any) {
+  if (!Array.isArray(statsResponseData) || statsResponseData.length === 0) {
+    return {
+      totalProducts: 0,
+      avgProductsPerSupplier: 0,
+      topSupplier: null,
+      bottomSupplier: null,
+    };
+  }
+
+  const totalProducts = statsResponseData?.reduce(
+    (acc: any, curr: { noOfProducts: any }) => acc + curr?.noOfProducts,
+    0
+  );
+  const avgProductsPerSupplier = totalProducts / statsResponseData?.length;
+  const sortedSuppliers = [...statsResponseData]?.sort(
+    (a, b) => b?.noOfProducts - a?.noOfProducts
+  );
+
+  return {
+    totalProducts,
+    avgProductsPerSupplier,
+    topSupplier: sortedSuppliers[0],
+    bottomSupplier: sortedSuppliers[sortedSuppliers.length - 1],
+  };
 }

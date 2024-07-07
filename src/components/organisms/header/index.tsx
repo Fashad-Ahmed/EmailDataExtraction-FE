@@ -1,14 +1,31 @@
-// import { useState } from 'react';
-
 import _ from 'lodash';
 import SPHeader from '@/components/atoms/sp-header';
 import SPButton from '@/components/atoms/sp-button';
 import { GoogleIcon } from '@/assets/svgs';
 import SPLabel from '@/components/atoms/sp-label';
+import api from '@/service/http.service';
+import { AxiosMethodEnum } from '@/utils/enums/general.enum';
 
+/**
+ * Header component for the application.
+ * It includes the Google sign-in button and a dropdown menu for user settings.
+ *
+ * @returns {React.ReactElement} - The Header component.
+ */
+
+let _api = new api();
 export default function Header() {
   // const [notificationVisible, setNotificationVisible] =
   //   useState<boolean>(false);
+
+  async function handleGoogleSignIn() {
+    const googleSignInResponse = await _api.call({
+      url: `https://gmail.googleapis.com/gmail/v1/users/Mydemo965256@gmail.com/messages`,
+      method: AxiosMethodEnum.GET,
+    });
+
+    console.log({ googleSignInResponse });
+  }
 
   return (
     <SPHeader
@@ -138,7 +155,10 @@ export default function Header() {
           </Link>
         </SPDropdown> */}
 
-        <SPButton className="flex max-w-[700px] flex-row items-center ">
+        <SPButton
+          className="flex max-w-[700px] flex-row items-center"
+          onClick={handleGoogleSignIn}
+        >
           <GoogleIcon />
           <SPLabel className="ml-2 text-base">Sign In With Google</SPLabel>
         </SPButton>

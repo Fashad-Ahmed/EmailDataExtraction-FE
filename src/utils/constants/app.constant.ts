@@ -1,12 +1,15 @@
 const location = window.location;
 const isStaging = location.hostname.includes('staging');
+const versionNumber = '1';
 export const APP_CONFIG = {
   app: {
     name: import.meta.env.VITE_APP_NAME || 'EMAIl_DATA_EXTRACTION',
   },
   api: {
     baseUrl:
-      'http://localhost:8080/v1/api' ||
+      `http://3.143.207.242:8080/v${versionNumber}/api` ||
+      // `http://localhost:8080/v${versionNumber}/api`
+
       (isStaging
         ? `https://api-spruce-staging.appnofy.com`
         : 'https://api-spruce.appnofy.com'),
