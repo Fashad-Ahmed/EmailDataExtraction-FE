@@ -5,6 +5,20 @@ import { GoogleIcon } from '@/assets/svgs';
 import SPLabel from '@/components/atoms/sp-label';
 import api from '@/service/http.service';
 import { AxiosMethodEnum } from '@/utils/enums/general.enum';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import { APP_CONFIG } from '@/utils/constants/app.constant';
+import { useEffect, useState } from 'react';
+
+interface IUserInfo {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+  authuser: string;
+  hd: string;
+  prompt: string;
+}
 
 /**
  * Header component for the application.
@@ -18,14 +32,48 @@ export default function Header() {
   // const [notificationVisible, setNotificationVisible] =
   //   useState<boolean>(false);
 
-  async function handleGoogleSignIn() {
-    const googleSignInResponse = await _api.call({
-      url: `https://gmail.googleapis.com/gmail/v1/users/Mydemo965256@gmail.com/messages`,
-      method: AxiosMethodEnum.GET,
-    });
+  const [userInfo, setUserInfo] = useState();
 
-    console.log({ googleSignInResponse });
+  console.log({ userInfo });
+  useEffect(() => {
+    if (userInfo) {
+      apiHit();
+    }
+  }, [userInfo]);
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse);
+      const userInfoData: IUserInfo = await axios.get(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        {
+          headers: { Authorization: 'Bearer <tokenResponse.access_token>' },
+        }
+      );
+
+      console.log({ userInfoData });
+      setUserInfo(userInfoData as any);
+
+      // googleSignInResponse(userInfo);
+    },
+    onError: (errorResponse) => console.log(errorResponse),
+  });
+
+  function apiHit() {
+    fetch(
+      `${APP_CONFIG.api.baseUrl}/public/email-content/extract?accessToken=${userInfo?.access_token}`
+    ).then((response) => console.log({ response }));
   }
+
+  const googleSignInResponse = async (userInfo: IUserInfo) => {
+    await _api.call({
+      url: `${APP_CONFIG.api.baseUrl}/public/email-content/extract`,
+      method: AxiosMethodEnum.GET,
+      query: {
+        accessToken: userInfo?.access_token,
+      },
+    });
+  };
 
   return (
     <SPHeader
@@ -157,7 +205,7 @@ export default function Header() {
 
         <SPButton
           className="flex max-w-[700px] flex-row items-center"
-          onClick={handleGoogleSignIn}
+          onClick={googleLogin as any}
         >
           <GoogleIcon />
           <SPLabel className="ml-2 text-base">Sign In With Google</SPLabel>
