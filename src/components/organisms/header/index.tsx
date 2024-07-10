@@ -3,8 +3,8 @@ import SPHeader from '@/components/atoms/sp-header';
 import SPButton from '@/components/atoms/sp-button';
 import { GoogleIcon } from '@/assets/svgs';
 import SPLabel from '@/components/atoms/sp-label';
-import api from '@/service/http.service';
-import { AxiosMethodEnum } from '@/utils/enums/general.enum';
+// import api from '@/service/http.service';
+// import { AxiosMethodEnum } from '@/utils/enums/general.enum';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { APP_CONFIG } from '@/utils/constants/app.constant';
@@ -27,7 +27,7 @@ interface IUserInfo {
  * @returns {React.ReactElement} - The Header component.
  */
 
-let _api = new api();
+// let _api = new api();
 export default function Header() {
   // const [notificationVisible, setNotificationVisible] =
   //   useState<boolean>(false);
