@@ -8,7 +8,7 @@ import { AxiosMethodEnum } from '@/utils/enums/general.enum';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { APP_CONFIG } from '@/utils/constants/app.constant';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 
 interface IUserInfo {
   access_token: string;
@@ -32,48 +32,37 @@ export default function Header() {
   // const [notificationVisible, setNotificationVisible] =
   //   useState<boolean>(false);
 
-  const [userInfo, setUserInfo] = useState();
-
-  console.log({ userInfo });
-  useEffect(() => {
-    if (userInfo) {
-      apiHit();
-    }
-  }, [userInfo]);
-
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       console.log(tokenResponse);
       const userInfoData: IUserInfo = await axios.get(
         'https://www.googleapis.com/oauth2/v3/userinfo',
         {
-          headers: { Authorization: 'Bearer <tokenResponse.access_token>' },
+          headers: { Authorization: 'Bearer ' + tokenResponse.access_token },
         }
       );
 
       console.log({ userInfoData });
-      setUserInfo(userInfoData as any);
 
-      // googleSignInResponse(userInfo);
+      apiHit(userInfoData as any);
     },
     onError: (errorResponse) => console.log(errorResponse),
   });
 
-  function apiHit() {
+  function apiHit(userInfoData: any) {
     fetch(
-      `${APP_CONFIG.api.baseUrl}/public/email-content/extract?accessToken=${userInfo?.access_token}`
+      `${APP_CONFIG.api.baseUrl}/public/email-content/extract?accessToken=${userInfoData.access_token}`
     ).then((response) => console.log({ response }));
   }
-
-  const googleSignInResponse = async (userInfo: IUserInfo) => {
-    await _api.call({
-      url: `${APP_CONFIG.api.baseUrl}/public/email-content/extract`,
-      method: AxiosMethodEnum.GET,
-      query: {
-        accessToken: userInfo?.access_token,
-      },
-    });
-  };
+  // const googleSignInResponse = async (userInfo: IUserInfo) => {
+  //   await _api.call({
+  //     url: `${APP_CONFIG.api.baseUrl}/public/email-content/extract`,
+  //     method: AxiosMethodEnum.GET,
+  //     query: {
+  //       accessToken: userInfo?.access_token,
+  //     },
+  //   });
+  // };
 
   return (
     <SPHeader
