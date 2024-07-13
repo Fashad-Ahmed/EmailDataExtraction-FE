@@ -1,10 +1,14 @@
+import localforage from 'localforage';
+import { redirect, RouteObject } from 'react-router-dom';
+
+import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
+
 import DashboardLayout from '@/components/layouts/dashboard';
 import Login from '@/pages/auth/login';
 import Dashboard from '@/pages/dashboard';
 import ProductManagement from '@/pages/product-management';
-import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
-import localforage from 'localforage';
-import { redirect, RouteObject } from 'react-router-dom';
+import CreateOrEditProducts from '@/pages/product-management/create-edit';
+import ViewProductsDetail from '@/pages/product-management/view';
 
 type Routes = RouteObject;
 
@@ -59,11 +63,6 @@ export const routes: Routes[] = [
 
 function getRoutes() {
   return [
-    // {
-    //   path: '/auth/sign-in',
-    //   // loader: signInCheck,
-    //   element: <Login />,
-    // },
     {
       path: 'dashboard',
       element: <Dashboard />,
@@ -72,6 +71,15 @@ function getRoutes() {
     {
       path: 'product-management',
       element: <ProductManagement />,
+    },
+
+    {
+      path: 'product-management/create/:productId?',
+      element: <CreateOrEditProducts />,
+    },
+    {
+      path: 'product-management/view/:productId',
+      element: <ViewProductsDetail />,
     },
   ];
 }
