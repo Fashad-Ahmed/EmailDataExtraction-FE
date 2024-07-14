@@ -3,7 +3,6 @@ import Sidebar from '@/components/organisms/sidebar';
 import { cn } from '@/utils/helpers/tailwind.helper';
 import { Layout } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import _ from 'lodash';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 

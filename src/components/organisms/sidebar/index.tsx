@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
