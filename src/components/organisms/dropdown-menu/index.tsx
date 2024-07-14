@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import SPButton from '@/components/atoms/sp-button';
 import SPContainer from '@/components/atoms/sp-container';
 import ActionHeading from '@/components/molecules/action-heading';

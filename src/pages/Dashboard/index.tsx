@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Stats from '@/components/molecules/stats';
 import Card from '@/components/organisms/card';
 import HighchartsReact from 'highcharts-react-official';

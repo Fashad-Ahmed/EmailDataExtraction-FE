@@ -1,7 +1,7 @@
-import localforage from 'localforage';
-import { redirect, RouteObject } from 'react-router-dom';
+// import localforage from 'localforage';
+import { RouteObject } from 'react-router-dom';
 
-import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
+// import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
 
 import DashboardLayout from '@/components/layouts/dashboard';
 import Login from '@/pages/auth/login';
@@ -12,21 +12,21 @@ import ViewProductsDetail from '@/pages/product-management/view';
 
 type Routes = RouteObject;
 
-async function authCheck() {
-  const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
-  if (!accessToken) {
-    return redirect('/auth/sign-in');
-  }
-  return true;
-}
+// async function authCheck() {
+//   const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
+//   if (!accessToken) {
+//     return redirect('/auth/sign-in');
+//   }
+//   return true;
+// }
 
-async function signInCheck() {
-  const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
-  if (accessToken) {
-    return redirect('/dashboard');
-  }
-  return true;
-}
+// async function signInCheck() {
+//   const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
+//   if (accessToken) {
+//     return redirect('/dashboard');
+//   }
+//   return true;
+// }
 
 export const routes: Routes[] = [
   {

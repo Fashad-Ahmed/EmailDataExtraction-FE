@@ -1,4 +1,5 @@
-import _ from 'lodash';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import SPHeader from '@/components/atoms/sp-header';
 import SPButton from '@/components/atoms/sp-button';
 import { GoogleIcon } from '@/assets/svgs';
@@ -54,15 +55,6 @@ export default function Header() {
       `${APP_CONFIG.api.baseUrl}/public/email-content/extract?accessToken=${userInfoData.access_token}`
     ).then((response) => console.log({ response }));
   }
-  // const googleSignInResponse = async (userInfo: IUserInfo) => {
-  //   await _api.call({
-  //     url: `${APP_CONFIG.api.baseUrl}/public/email-content/extract`,
-  //     method: AxiosMethodEnum.GET,
-  //     query: {
-  //       accessToken: userInfo?.access_token,
-  //     },
-  //   });
-  // };
 
   return (
     <SPHeader

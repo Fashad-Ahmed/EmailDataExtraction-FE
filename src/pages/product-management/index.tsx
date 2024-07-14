@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { RightArrowIcon } from '@/assets/svgs';
 import SPTable from '@/components/atoms/sp-table';
 import Card from '@/components/organisms/card';
