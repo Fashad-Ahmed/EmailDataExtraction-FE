@@ -5,10 +5,12 @@ import { RouteObject } from 'react-router-dom';
 
 import DashboardLayout from '@/components/layouts/dashboard';
 import Login from '@/pages/auth/login';
+import Dashboard from '@/pages/dashboard-management';
+
 import ProductManagement from '@/pages/product-management';
+
 import CreateOrEditProducts from '@/pages/product-management/create-edit';
 import ViewProductsDetail from '@/pages/product-management/view';
-// import Dashboard from '../pages/dashboard/index';
 
 type Routes = RouteObject;
 
@@ -63,10 +65,10 @@ export const routes: Routes[] = [
 
 function getRoutes() {
   return [
-    // {
-    //   path: 'dashboard',
-    //   element: <Dashboard />,
-    // },
+    {
+      path: 'dashboard',
+      element: <Dashboard />,
+    },
 
     {
       path: 'product-management',
