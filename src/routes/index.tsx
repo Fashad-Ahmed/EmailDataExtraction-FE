@@ -8,7 +8,7 @@ import Login from '@/pages/auth/login';
 import ProductManagement from '@/pages/product-management';
 import CreateOrEditProducts from '@/pages/product-management/create-edit';
 import ViewProductsDetail from '@/pages/product-management/view';
-import Dashboard from '@/pages/dashboard';
+import Dashboard from '../pages/dashboard/index';
 
 type Routes = RouteObject;
 
