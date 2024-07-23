@@ -73,15 +73,6 @@ export default function ProductManagement() {
         return <p>{data?.location ?? 'N/A'}</p>;
       },
     },
-
-    {
-      title: '',
-      render: () => (
-        <Link to={`./view/${6}`}>
-          <RightArrowIcon className="h-6 w-6" />
-        </Link>
-      ),
-    },
   ];
 
   return (

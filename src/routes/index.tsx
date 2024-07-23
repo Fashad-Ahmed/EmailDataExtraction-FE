@@ -8,9 +8,13 @@ import Login from '@/pages/auth/login';
 import Dashboard from '@/pages/dashboard-management';
 
 import ProductManagement from '@/pages/product-management';
+import CreateOrEditProducts from '@/pages/products/create-edit';
+import ViewProductsDetail from '@/pages/products/view';
+import Products from '@/pages/products';
 
-import CreateOrEditProducts from '@/pages/product-management/create-edit';
-import ViewProductsDetail from '@/pages/product-management/view';
+import CategoryManagement from '@/pages/category-management';
+import CreateOrEditCategory from '@/pages/category-management/create-edit';
+import ViewCategoryDetail from '@/pages/category-management/view';
 
 type Routes = RouteObject;
 
@@ -76,12 +80,30 @@ function getRoutes() {
     },
 
     {
+      path: 'products',
+      element: <Products />,
+    },
+    {
       path: 'product-management/create/:productId?',
       element: <CreateOrEditProducts />,
     },
     {
       path: 'product-management/view/:productId',
       element: <ViewProductsDetail />,
+    },
+
+    {
+      path: 'category-management',
+      element: <CategoryManagement />,
+    },
+
+    {
+      path: 'category-management/create/:categoryId?',
+      element: <CreateOrEditCategory />,
+    },
+    {
+      path: 'category-management/view/:categoryId',
+      element: <ViewCategoryDetail />,
     },
   ];
 }
