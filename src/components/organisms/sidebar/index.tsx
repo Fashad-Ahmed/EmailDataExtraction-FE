@@ -3,7 +3,12 @@
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
-import { PieChartOutlined, HomeOutlined } from '@ant-design/icons';
+import {
+  PieChartOutlined,
+  HomeOutlined,
+  ProductFilled,
+  ProductOutlined,
+} from '@ant-design/icons';
 import SPMenu from '@/components/atoms/sp-menu';
 import SPSider from '@/components/atoms/sp-sider';
 import { NNC } from '@/assets/images';
@@ -20,6 +25,7 @@ export default function Sidebar() {
   const location = useLocation();
 
   function openParent(key: string): string[] {
+    console.log({ key });
     switch (key) {
       case 'property-managers':
         return ['company-management'];
@@ -131,6 +137,16 @@ function getSidebarItems() {
       key: 'product-management',
       label: 'Product Management',
       icon: <HomeOutlined />,
+    },
+    {
+      key: 'category-management',
+      label: 'Product Category Management',
+      icon: <ProductFilled />,
+    },
+    {
+      key: 'products',
+      label: 'Products',
+      icon: <ProductOutlined />,
     },
   ];
 

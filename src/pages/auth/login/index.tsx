@@ -1,29 +1,31 @@
 import { Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import { Link, useNavigate } from 'react-router-dom';
 
 import { NNC } from '@/assets/images';
 import { GoogleIcon } from '@/assets/svgs';
+import { ILoginForm } from '@/types/auth.types';
+import { useSignIn } from './queries';
 
 import SPButton from '@/components/atoms/sp-button';
 import SPContainer from '@/components/atoms/sp-container';
 import SPLabel from '@/components/atoms/sp-label';
-import FormCheckbox from '@/components/molecules/form-checkbox';
+// import FormCheckbox from '@/components/molecules/form-checkbox';
 import FormLabelInput from '@/components/molecules/form-label-input';
 import SocialButton from '@/components/molecules/social-button';
 
-interface LoginForm {
-  username: string;
-  password: string;
-  rememberMe: boolean;
-}
+/**
+ * The Login component is responsible for rendering the login form and handling user authentication.
+ * It uses Ant Design's Form component and custom components like SPButton, SPContainer, SPLabel, FormLabelInput, and SocialButton.
+ *
+ * @returns {React.ReactElement} - The rendered Login component.
+ */
 
 export default function Login() {
-  const [form] = useForm<LoginForm>();
-  const navigate = useNavigate();
+  const [form] = useForm<ILoginForm>();
+  const { signIn, signInLoading } = useSignIn();
 
-  function onSubmit() {
-    navigate('/');
+  async function onSubmit(values: ILoginForm) {
+    await signIn(values);
   }
   return (
     <div className="flex h-full flex-1 flex-col items-center justify-center">
@@ -43,7 +45,7 @@ export default function Login() {
           className="grid grid-cols-1 gap-2"
         >
           <FormLabelInput
-            name={'email'}
+            name={'login'}
             rules={[
               {
                 type: 'email',
@@ -54,7 +56,7 @@ export default function Login() {
                 message: 'Please enter your email',
               },
             ]}
-            placeholder="henryarthur@example.com"
+            placeholder="sam@example.com"
             label="Email Address"
           />
 
@@ -71,13 +73,13 @@ export default function Login() {
           />
           <div className="flex justify-between">
             <div className="flex flex-[0.5] items-center justify-start">
-              <FormCheckbox name={'rememberMe'}>
+              {/* <FormCheckbox name={'rememberMe'}>
                 <SPLabel className="text-md font-medium text-primary">
                   Remember me
                 </SPLabel>
-              </FormCheckbox>
+              </FormCheckbox> */}
             </div>
-            <Form.Item>
+            {/* <Form.Item>
               <Link
                 to="/"
                 // to="/auth/forgot-password"
@@ -85,10 +87,10 @@ export default function Login() {
               >
                 Forgot Password
               </Link>
-            </Form.Item>
+            </Form.Item> */}
           </div>
           <SPButton
-            // loading={isPending}
+            loading={signInLoading}
             type="primary"
             className="w-full"
             htmlType="submit"

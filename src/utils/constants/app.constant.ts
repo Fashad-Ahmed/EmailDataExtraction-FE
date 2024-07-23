@@ -7,9 +7,9 @@ export const APP_CONFIG = {
   },
   api: {
     baseUrl:
-      `http://3.143.207.242:8080/v${versionNumber}/api` ||
-      // `http://localhost:8080/v${versionNumber}/api`
+      // `http://backend.erp-nnc.com:8080/v${versionNumber}/api`
 
+      `http://localhost:8080/v${versionNumber}/api` ||
       (isStaging
         ? `https://api-spruce-staging.appnofy.com`
         : 'https://api-spruce.appnofy.com'),

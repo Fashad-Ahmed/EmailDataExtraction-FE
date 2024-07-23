@@ -70,7 +70,7 @@ export default function Dashboard() {
     );
 
   return (
-    <Card heading="Stats">
+    <Card heading="Dashboard Statistics">
       <div className="grid grid-cols-1 gap-5">
         <div className="grid  grid-cols-1 gap-5 md:grid-cols-3">
           <Stats.Group
