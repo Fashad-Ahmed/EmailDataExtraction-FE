@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { RightArrowIcon } from '@/assets/svgs';
+// import { RightArrowIcon } from '@/assets/svgs';
 import SPTable from '@/components/atoms/sp-table';
 import Card from '@/components/organisms/card';
 import useGetApi from '@/hooks/useGetApi';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 // import { PaginatedResponse } from '@/hooks/usePaginatedApi';
 
 /**

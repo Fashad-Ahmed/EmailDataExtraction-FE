@@ -1,5 +1,5 @@
 import usePostApi from '@/hooks/usePostApi';
-import { useBoundStore } from '@/store';
+// import { useBoundStore } from '@/store';
 import { API_ROUTES } from '@/utils/constants/api-route.constant';
 // import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
 // import localforage from 'localforage';
@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
  */
 
 export function useSignIn() {
-  const { setUser } = useBoundStore((state) => state);
+  // const { setUser } = useBoundStore((state) => state);
   const navigate = useNavigate();
 
   const { mutateAsync: signIn, isPending } = usePostApi({
