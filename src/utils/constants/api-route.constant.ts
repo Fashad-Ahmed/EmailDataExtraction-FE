@@ -1,6 +1,15 @@
 export const API_ROUTES = {
   auth: {
-    refresh: '/auth/refresh-token',
+    login: '/public/auth/token',
+    refresh: '/auth/token/refresh',
+  },
+  productCategory: {
+    categoryById: '/product-category/',
+    createOrRead: '/product-category',
+  },
+  emailContent: {
+    extractEmailData: '/public/email-content',
+    extractAllEmails: '/public/email-content/extract',
   },
 };
 
