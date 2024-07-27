@@ -9,53 +9,17 @@ import { productCategoryData } from '@/data/category';
 import SPTable from '@/components/atoms/sp-table';
 import DashboardPage from '@/components/layouts/dashboard-page';
 import SPButton from '@/components/atoms/sp-button';
+import useGetApi from '@/hooks/useGetApi';
+import { API_ROUTES } from '@/utils/constants/api-route.constant';
 // import { PaginatedResponse } from '@/hooks/usePaginatedApi';
 
 export default function CategoryManagement() {
-  const columns = [
-    {
-      title: 'ID',
-      dataIndex: ['id'],
-    },
-    {
-      title: 'Name',
-      dataIndex: ['name'],
-    },
-    {
-      title: 'Category Description',
-      width: 300,
-      dataIndex: ['description'],
-    },
+  const { data: categoryResponse, isLoading } = useGetApi<any>({
+    key: [[API_ROUTES.productCategory.createOrRead]],
+    url: API_ROUTES.productCategory.createOrRead,
+  });
 
-    {
-      title: 'Sub Categories',
-      render: (data: any) => {
-        return (
-          <p>
-            {(data?.subCategories &&
-              data?.subCategories.map((i: string) => i).join(', ')) ??
-              'N/A'}
-          </p>
-        );
-      },
-    },
-
-    {
-      title: 'Active',
-      render: (data: any) => {
-        return <p>{data?.isActive ? 'Yes' : 'No'}</p>;
-      },
-    },
-
-    // {
-    //   title: '',
-    //   render: () => (
-    //     <Link to={`./view/${6}`}>
-    //       <RightArrowIcon className="h-6 w-6" />
-    //     </Link>
-    //   ),
-    // },
-  ];
+  console.log({ categoryResponse });
 
   return (
     <DashboardPage
@@ -73,7 +37,7 @@ export default function CategoryManagement() {
         dataSource={productCategoryData}
         columns={columns}
         rowKey={(record) => record?.id}
-        // loading={isLoading}
+        loading={isLoading}
         pagination={
           {
             // total: count,
@@ -94,3 +58,48 @@ export default function CategoryManagement() {
     </DashboardPage>
   );
 }
+
+const columns = [
+  {
+    title: 'ID',
+    dataIndex: ['id'],
+  },
+  {
+    title: 'Name',
+    dataIndex: ['name'],
+  },
+  {
+    title: 'Category Description',
+    width: 300,
+    dataIndex: ['description'],
+  },
+
+  {
+    title: 'Sub Categories',
+    render: (data: any) => {
+      return (
+        <p>
+          {(data?.subCategories &&
+            data?.subCategories.map((i: string) => i).join(', ')) ??
+            'N/A'}
+        </p>
+      );
+    },
+  },
+
+  {
+    title: 'Active',
+    render: (data: any) => {
+      return <p>{data?.isActive ? 'Yes' : 'No'}</p>;
+    },
+  },
+
+  // {
+  //   title: '',
+  //   render: () => (
+  //     <Link to={`./view/${6}`}>
+  //       <RightArrowIcon className="h-6 w-6" />
+  //     </Link>
+  //   ),
+  // },
+];

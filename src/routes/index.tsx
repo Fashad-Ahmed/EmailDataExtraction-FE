@@ -84,11 +84,11 @@ function getRoutes() {
       element: <Products />,
     },
     {
-      path: 'product-management/create/:productId?',
+      path: 'products/create/:productId?',
       element: <CreateOrEditProducts />,
     },
     {
-      path: 'product-management/view/:productId',
+      path: 'products/view/:productId',
       element: <ViewProductsDetail />,
     },
 

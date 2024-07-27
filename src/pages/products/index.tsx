@@ -7,48 +7,17 @@ import SPTable from '@/components/atoms/sp-table';
 import DashboardPage from '@/components/layouts/dashboard-page';
 
 import { productData } from '@/data/product';
+import { API_ROUTES } from '@/utils/constants/api-route.constant';
+import useGetApi from '@/hooks/useGetApi';
 // import { PaginatedResponse } from '@/hooks/usePaginatedApi';
 
 export default function Products() {
-  const columns = [
-    {
-      title: 'ID',
-      dataIndex: ['id'],
-    },
-    {
-      title: 'Name',
-      dataIndex: ['name'],
-    },
-    {
-      title: 'Description',
-      width: 300,
-      dataIndex: ['description'],
-    },
-    {
-      title: 'Price',
-      dataIndex: ['price'],
-    },
-    {
-      title: 'Discounted Amount',
-      dataIndex: ['discountPrice'],
-    },
+  const { data: productResponse, isLoading } = useGetApi<any>({
+    key: [[API_ROUTES.products.createOrRead]],
+    url: API_ROUTES.products.createOrRead,
+  });
 
-    {
-      title: 'Category',
-      render: (data: any) => {
-        return <p>{data?.productCategory?.name ?? 'N/A'}</p>;
-      },
-    },
-
-    // {
-    //   title: '',
-    //   render: () => (
-    //     <Link to={`./view/${6}`}>
-    //       <RightArrowIcon className="h-6 w-6" />
-    //     </Link>
-    //   ),
-    // },
-  ];
+  console.log({ productResponse });
 
   return (
     <DashboardPage
@@ -67,7 +36,7 @@ export default function Products() {
         dataSource={productData}
         columns={columns}
         rowKey={(record) => record?.id}
-        // loading={isLoading}
+        loading={isLoading}
         pagination={
           {
             // total: count,
@@ -88,3 +57,43 @@ export default function Products() {
     </DashboardPage>
   );
 }
+
+const columns = [
+  {
+    title: 'ID',
+    dataIndex: ['id'],
+  },
+  {
+    title: 'Name',
+    dataIndex: ['name'],
+  },
+  {
+    title: 'Description',
+    width: 300,
+    dataIndex: ['description'],
+  },
+  {
+    title: 'Price',
+    dataIndex: ['price'],
+  },
+  {
+    title: 'Discounted Amount',
+    dataIndex: ['discountPrice'],
+  },
+
+  {
+    title: 'Category',
+    render: (data: any) => {
+      return <p>{data?.productCategory?.name ?? 'N/A'}</p>;
+    },
+  },
+
+  // {
+  //   title: '',
+  //   render: () => (
+  //     <Link to={`./view/${6}`}>
+  //       <RightArrowIcon className="h-6 w-6" />
+  //     </Link>
+  //   ),
+  // },
+];

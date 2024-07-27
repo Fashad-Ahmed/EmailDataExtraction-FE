@@ -11,6 +11,10 @@ export const API_ROUTES = {
     extractEmailData: '/public/email-content',
     extractAllEmails: '/public/email-content/extract',
   },
+  products: {
+    productById: '/product/',
+    createOrRead: '/product',
+  },
 };
 
 Object.seal(API_ROUTES);
