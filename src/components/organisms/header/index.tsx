@@ -9,6 +9,9 @@ import SPLabel from '@/components/atoms/sp-label';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { APP_CONFIG } from '@/utils/constants/app.constant';
+import { useQueryClient } from '@tanstack/react-query';
+import localforage from 'localforage';
+import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
 // import { useEffect, useState } from 'react';
 
 interface IUserInfo {
@@ -33,9 +36,10 @@ export default function Header() {
   // const [notificationVisible, setNotificationVisible] =
   //   useState<boolean>(false);
 
+  const queryClient = useQueryClient();
+
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
       const userInfoData: IUserInfo = await axios.get(
         'https://www.googleapis.com/oauth2/v3/userinfo',
         {
@@ -45,15 +49,26 @@ export default function Header() {
 
       console.log({ userInfoData });
 
-      apiHit(userInfoData as any);
+      apiHit(tokenResponse as any);
     },
     onError: (errorResponse) => console.log(errorResponse),
   });
 
-  function apiHit(userInfoData: any) {
+  async function apiHit(tokenResponse: any) {
+    const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
+
     fetch(
-      `${APP_CONFIG.api.baseUrl}/public/email-content/extract?accessToken=${userInfoData.access_token}`
-    ).then((response) => console.log({ response }));
+      `${APP_CONFIG.api.baseUrl}/email-content/extract?accessToken=${tokenResponse?.access_token}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    ).then((response) => {
+      console.log({ response });
+      queryClient.invalidateQueries({ queryKey: ['email-content'] });
+    });
   }
 
   return (
@@ -189,7 +204,7 @@ export default function Header() {
           onClick={googleLogin as any}
         >
           <GoogleIcon />
-          <SPLabel className="ml-2 text-base">Sign In With Google</SPLabel>
+          <SPLabel className="ml-2 text-base">Extract Data with Email</SPLabel>
         </SPButton>
       </div>
       <div className="flex items-center justify-between gap-3"></div>

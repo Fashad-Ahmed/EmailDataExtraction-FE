@@ -1,5 +1,5 @@
 // import localforage from 'localforage';
-import { RouteObject } from 'react-router-dom';
+import { redirect, RouteObject } from 'react-router-dom';
 
 // import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
 
@@ -15,57 +15,40 @@ import Products from '@/pages/products';
 import CategoryManagement from '@/pages/category-management';
 import CreateOrEditCategory from '@/pages/category-management/create-edit';
 import ViewCategoryDetail from '@/pages/category-management/view';
+import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
+import localforage from 'localforage';
 
-type Routes = RouteObject;
+type Routes = RouteObject & { isProtected?: boolean };
 
-// async function authCheck() {
-//   const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
-//   if (!accessToken) {
-//     return redirect('/auth/sign-in');
-//   }
-//   return true;
-// }
+async function authCheck() {
+  const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
+  if (!accessToken) {
+    return redirect('/auth/sign-in');
+  }
+  return true;
+}
 
-// async function signInCheck() {
-//   const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
-//   if (accessToken) {
-//     return redirect('/dashboard');
-//   }
-//   return true;
-// }
+async function signInCheck() {
+  const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
+  if (accessToken) {
+    return redirect('/dashboard');
+  }
+  return true;
+}
 
 export const routes: Routes[] = [
   {
     path: '/',
     element: <DashboardLayout />,
+    loader: authCheck,
     children: getRoutes(),
   },
   {
     path: '/auth/sign-in',
-    // loader: signInCheck,
+    loader: signInCheck,
     element: <Login />,
   },
 ];
-
-// [
-//   {
-//     path: '/',
-//     element: <DashboardLayout />,
-//     children: [
-//       {
-//         path: '/',
-//         element: <DashboardLayout />,
-//         loader: authCheck,
-//         children: getRoutes(),
-//       },
-//       {
-//         path: '/auth/sign-in',
-//         loader: signInCheck,
-//         element: <Login />,
-//       },
-//     ],
-//   },
-// ];
 
 function getRoutes() {
   return [
