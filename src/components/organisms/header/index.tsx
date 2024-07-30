@@ -12,6 +12,7 @@ import { APP_CONFIG } from '@/utils/constants/app.constant';
 import { useQueryClient } from '@tanstack/react-query';
 import localforage from 'localforage';
 import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
+import { useNavigate } from 'react-router-dom';
 // import { useEffect, useState } from 'react';
 
 interface IUserInfo {
@@ -37,7 +38,7 @@ export default function Header() {
   //   useState<boolean>(false);
 
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const userInfoData: IUserInfo = await axios.get(
@@ -211,7 +212,19 @@ export default function Header() {
           <SPLabel className="ml-2 text-base">Extract Data with Email</SPLabel>
         </SPButton>
       </div>
-      <div className="flex items-center justify-between gap-3"></div>
+      <div className="ml-2 flex items-center justify-between gap-3">
+        <SPButton
+          onClick={async () => {
+            await localforage.removeItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
+            await localforage.removeItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN);
+            queryClient.clear();
+
+            navigate('/auth/sign-in', { replace: true });
+          }}
+        >
+          Logout
+        </SPButton>
+      </div>
     </SPHeader>
   );
 }
