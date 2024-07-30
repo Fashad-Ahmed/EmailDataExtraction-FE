@@ -7,6 +7,7 @@ export default function useProductDetails(productId: string | null) {
     useGetApi<IProductsDetails>({
       key: [`${API_ROUTES.products.createOrRead}${productId}`],
       url: `${API_ROUTES.products.createOrRead}${productId}`,
+      enabled: Boolean(productId),
     });
 
   return {

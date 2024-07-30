@@ -16,6 +16,8 @@ import {
   skuValidationRules,
   sortinOrderValidationRule,
 } from '@/validations/products';
+import { API_ROUTES } from '@/utils/constants/api-route.constant';
+import SelectSearch from '@/components/molecules/select-search';
 
 const CreateOrEditProducts = () => {
   const params = useParams();
@@ -81,25 +83,24 @@ const CreateOrEditProducts = () => {
               inputMode="numeric"
             />
 
-            <FormLabelInput.Select
+            <SelectSearch
               name={'productCategoryId'}
               rules={categoryValidationRule}
               label="Category"
               placeholder="Category"
-              // options={propertyType.map((type) => ({
-              //   label: type,
-              //   value: type,
-              // }))}
-              options={[
-                {
-                  label: 'Category Type 1',
-                  value: '1',
-                },
-                {
-                  label: 'Category Type 2',
-                  value: '2',
-                },
-              ]}
+              queryKey={['category']}
+              url={API_ROUTES.productCategory.createOrRead}
+              labelKey={['name']}
+              // options={[
+              //   {
+              //     label: 'Category Type 1',
+              //     value: '1',
+              //   },
+              //   {
+              //     label: 'Category Type 2',
+              //     value: '2',
+              //   },
+              // ]}
             />
 
             <FormLabelInput.TextArea

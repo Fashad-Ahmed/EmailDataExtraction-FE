@@ -44,6 +44,10 @@ export default function Header() {
         'https://www.googleapis.com/oauth2/v3/userinfo',
         {
           headers: { Authorization: 'Bearer ' + tokenResponse.access_token },
+          params: {
+            scope:
+              'https://mail.google.com/ https://www.googleapis.com/auth/gmail.metadata https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.readonly',
+          },
         }
       );
 

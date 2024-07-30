@@ -14,6 +14,8 @@ import {
   sortinOrderValidationRule,
   subCategoryValidationRule,
 } from '@/validations/product-category';
+import SelectSearch from '@/components/molecules/select-search';
+import { API_ROUTES } from '@/utils/constants/api-route.constant';
 
 export default function CreateOrEditCategory() {
   const params = useParams();
@@ -58,45 +60,47 @@ export default function CreateOrEditCategory() {
               className={'!h-[70px]'}
               rules={descriptionValidationRules}
             />
-            <FormLabelInput.Select
+            <SelectSearch
               mode="multiple"
               filterOption={false}
               maxTagCount={3}
               maxTagTextLength={10}
               name={'subCategoriesId'}
-              rules={subCategoryValidationRule}
+              // rules={subCategoryValidationRule}
               label="Sub Categories"
               placeholder="Sub Categories"
-              options={[
-                {
-                  label: 'Type 1',
-                  value: '1',
-                },
-                {
-                  label: 'Type 2',
-                  value: '2',
-                },
-              ]}
-              // options={propertyType.map((type) => ({
-              //   label: type,
-              //   value: type,
-              // }))}
+              // options={[
+              //   {
+              //     label: 'Type 1',
+              //     value: '1',
+              //   },
+              //   {
+              //     label: 'Type 2',
+              //     value: '2',
+              //   },
+              // ]}
+              queryKey={['category']}
+              url={API_ROUTES.productCategory.createOrRead}
+              labelKey={['name']}
             />
-            <FormLabelInput.Select
+            <SelectSearch
               name={'parentCategoryId'}
-              rules={subCategoryValidationRule}
+              // rules={subCategoryValidationRule}
               label="Parent Category"
               placeholder="Parent Category"
-              options={[
-                {
-                  label: 'Parent Type 1',
-                  value: '1',
-                },
-                {
-                  label: 'Parent Type 2',
-                  value: '2',
-                },
-              ]}
+              // options={[
+              //   {
+              //     label: 'Parent Type 1',
+              //     value: '1',
+              //   },
+              //   {
+              //     label: 'Parent Type 2',
+              //     value: '2',
+              //   },
+              // ]}
+              queryKey={['category']}
+              url={API_ROUTES.productCategory.createOrRead}
+              labelKey={['name']}
             />
           </div>
 

@@ -7,6 +7,7 @@ export default function useCategoryDetails(categoryId?: string | null) {
     useGetApi<ICategory>({
       key: [`${API_ROUTES.productCategory.createOrRead}${categoryId}`],
       url: `${API_ROUTES.productCategory.createOrRead}${categoryId}`,
+      enabled: Boolean(categoryId),
     });
 
   return {

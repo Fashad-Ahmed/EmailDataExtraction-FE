@@ -28,9 +28,7 @@ export default function useCreateOrEditProduct(productId: string | null) {
     showErrorMessage: true,
     onSuccess: () =>
       navigate(
-        productId
-          ? `/product-management/view/${productId}`
-          : '/product-management'
+        productId ? `/product-management/view/${productId}` : '/products'
       ),
   });
 
