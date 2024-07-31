@@ -2,7 +2,7 @@ import { Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 
 import { NNC } from '@/assets/images';
-import { GoogleIcon } from '@/assets/svgs';
+// import { GoogleIcon } from '@/assets/svgs';
 import { ILoginForm } from '@/types/auth.types';
 import { useSignIn } from './queries';
 
@@ -11,7 +11,7 @@ import SPContainer from '@/components/atoms/sp-container';
 import SPLabel from '@/components/atoms/sp-label';
 // import FormCheckbox from '@/components/molecules/form-checkbox';
 import FormLabelInput from '@/components/molecules/form-label-input';
-import SocialButton from '@/components/molecules/social-button';
+// import SocialButton from '@/components/molecules/social-button';
 
 /**
  * The Login component is responsible for rendering the login form and handling user authentication.
