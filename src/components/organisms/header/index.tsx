@@ -41,18 +41,48 @@ export default function Header() {
   const navigate = useNavigate();
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
+      console.log({ tokenResponse });
       const userInfoData: IUserInfo = await axios.get(
         'https://www.googleapis.com/oauth2/v3/userinfo',
+        // 'https://accounts.google.com/o/oauth2/iframerpc',
         {
           headers: { Authorization: 'Bearer ' + tokenResponse.access_token },
           params: {
+            response_type: 'token',
+            login_hint: tokenResponse?.access_token,
+            client_id:
+              '1089634070694-b4tv7lvak2513v6kl2t6i92juaivkkaj.apps.googleusercontent.com',
+            origin: 'https://explorer.apis.google.com',
             scope:
-              'https://mail.google.com/ https://www.googleapis.com/auth/gmail.metadata https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.readonly',
+              'https://mail.google.com/ https://www.googleapis.com/auth/gmail.modify',
+            ss_domain: 'https://explorer.apis.google.com',
+            include_granted_scopes: false,
+            auto: 1,
           },
         }
       );
 
       console.log({ userInfoData });
+
+      // const tokenResponse = await axios.get(
+      //   'https://accounts.google.com/o/oauth2/iframerpc',
+      //   {
+      //     params: {
+      //       action: 'issueToken',
+      //       response_type: 'token',
+      //       login_hint: tokenResponse2?.access_token,
+      //       client_id:
+      //         '1089634070694-b4tv7lvak2513v6kl2t6i92juaivkkaj.apps.googleusercontent.com',
+      //       // '436969206006-ie164v82nc6orrivkfu02d54dd9rhu1a.apps.googleusercontent.com',
+      //       origin: 'https://explorer.apis.google.com',
+      //       scope:
+      //         'https://mail.google.com/ https://www.googleapis.com/auth/gmail.modify',
+      //       ss_domain: 'https://explorer.apis.google.com',
+      //       include_granted_scopes: false,
+      //       auto: 1,
+      //     },
+      //   }
+      // );
 
       apiHit(tokenResponse as any);
     },

@@ -8,7 +8,7 @@ import { theme } from './constants/theme.constants';
 import './index.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId="436969206006-ie164v82nc6orrivkfu02d54dd9rhu1a.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="1089634070694-b4tv7lvak2513v6kl2t6i92juaivkkaj.apps.googleusercontent.com">
       <ConfigProvider theme={theme}>
         <AntApp className="h-full">
           <App />

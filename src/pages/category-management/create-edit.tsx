@@ -12,7 +12,6 @@ import {
   descriptionValidationRules,
   nameValidationRules,
   sortinOrderValidationRule,
-  subCategoryValidationRule,
 } from '@/validations/product-category';
 import SelectSearch from '@/components/molecules/select-search';
 import { API_ROUTES } from '@/utils/constants/api-route.constant';
