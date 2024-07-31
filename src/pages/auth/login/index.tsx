@@ -94,14 +94,14 @@ export default function Login() {
             <SPLabel className="font-bold text-white">Login</SPLabel>
           </SPButton>
         </Form>
-        <div className="flex flex-col items-center justify-center gap-4 pt-5 text-primary">
+        {/* <div className="flex flex-col items-center justify-center gap-4 pt-5 text-primary">
           <p>Or login with</p>
           <div className="flex gap-5">
             <div className="flex justify-center space-x-4">
               <SocialButton icon={<GoogleIcon className="h-6 w-6" />} />
             </div>
           </div>
-        </div>
+        </div> */}
       </SPContainer>
     </div>
   );
