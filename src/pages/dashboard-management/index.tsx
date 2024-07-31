@@ -15,8 +15,8 @@ import { Spin } from 'antd';
 
 export default function Dashboard() {
   const { data: statsResponse, isLoading } = useGetApi<any>({
-    key: ['/public/dashboard'],
-    url: `/public/dashboard`,
+    key: ['dashboard'],
+    url: `/dashboard`,
   });
 
   const statsResponseData = statsResponse ?? [];

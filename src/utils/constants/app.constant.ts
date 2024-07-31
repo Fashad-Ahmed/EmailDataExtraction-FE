@@ -7,16 +7,13 @@ export const APP_CONFIG = {
   },
   api: {
     baseUrl:
-      // `http://backend.erp-nnc.com:8080/v${versionNumber}/api`
-
-      `http://localhost:8080/v${versionNumber}/api` ||
+      `https://backend.erp-nnc.com/v${versionNumber}/api` ||
+      // `http://localhost:8080/v${versionNumber}/api`
       (isStaging
         ? `https://api-spruce-staging.appnofy.com`
         : 'https://api-spruce.appnofy.com'),
 
-    assetsUrl:
-      import.meta.env.VITE_ASSETS_BASE_URL ||
-      'https://spruce-assets-dev.s3.amazonaws.com',
+    assetsUrl: import.meta.env.VITE_ASSETS_BASE_URL || '',
   },
   week: [
     'sunday',

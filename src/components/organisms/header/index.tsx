@@ -9,6 +9,10 @@ import SPLabel from '@/components/atoms/sp-label';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { APP_CONFIG } from '@/utils/constants/app.constant';
+import { useQueryClient } from '@tanstack/react-query';
+import localforage from 'localforage';
+import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
+import { useNavigate } from 'react-router-dom';
 // import { useEffect, useState } from 'react';
 
 interface IUserInfo {
@@ -33,27 +37,73 @@ export default function Header() {
   // const [notificationVisible, setNotificationVisible] =
   //   useState<boolean>(false);
 
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
+      console.log({ tokenResponse });
       const userInfoData: IUserInfo = await axios.get(
         'https://www.googleapis.com/oauth2/v3/userinfo',
+        // 'https://accounts.google.com/o/oauth2/iframerpc',
         {
           headers: { Authorization: 'Bearer ' + tokenResponse.access_token },
+          params: {
+            response_type: 'token',
+            login_hint: tokenResponse?.access_token,
+            client_id:
+              '1089634070694-b4tv7lvak2513v6kl2t6i92juaivkkaj.apps.googleusercontent.com',
+            origin: 'https://explorer.apis.google.com',
+            scope:
+              'https://mail.google.com/ https://www.googleapis.com/auth/gmail.modify',
+            ss_domain: 'https://explorer.apis.google.com',
+            include_granted_scopes: false,
+            auto: 1,
+          },
         }
       );
 
       console.log({ userInfoData });
 
-      apiHit(userInfoData as any);
+      // const tokenResponse = await axios.get(
+      //   'https://accounts.google.com/o/oauth2/iframerpc',
+      //   {
+      //     params: {
+      //       action: 'issueToken',
+      //       response_type: 'token',
+      //       login_hint: tokenResponse2?.access_token,
+      //       client_id:
+      //         '1089634070694-b4tv7lvak2513v6kl2t6i92juaivkkaj.apps.googleusercontent.com',
+      //       // '436969206006-ie164v82nc6orrivkfu02d54dd9rhu1a.apps.googleusercontent.com',
+      //       origin: 'https://explorer.apis.google.com',
+      //       scope:
+      //         'https://mail.google.com/ https://www.googleapis.com/auth/gmail.modify',
+      //       ss_domain: 'https://explorer.apis.google.com',
+      //       include_granted_scopes: false,
+      //       auto: 1,
+      //     },
+      //   }
+      // );
+
+      apiHit(tokenResponse as any);
     },
     onError: (errorResponse) => console.log(errorResponse),
   });
 
-  function apiHit(userInfoData: any) {
+  async function apiHit(tokenResponse: any) {
+    const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
+
     fetch(
-      `${APP_CONFIG.api.baseUrl}/public/email-content/extract?accessToken=${userInfoData.access_token}`
-    ).then((response) => console.log({ response }));
+      `${APP_CONFIG.api.baseUrl}/email-content/extract?accessToken=${tokenResponse?.access_token}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    ).then((response) => {
+      console.log({ response });
+      queryClient.invalidateQueries({ queryKey: ['email-content'] });
+    });
   }
 
   return (
@@ -189,10 +239,22 @@ export default function Header() {
           onClick={googleLogin as any}
         >
           <GoogleIcon />
-          <SPLabel className="ml-2 text-base">Sign In With Google</SPLabel>
+          <SPLabel className="ml-2 text-base">Extract Data with Email</SPLabel>
         </SPButton>
       </div>
-      <div className="flex items-center justify-between gap-3"></div>
+      <div className="ml-2 flex items-center justify-between gap-3">
+        <SPButton
+          onClick={async () => {
+            await localforage.removeItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
+            await localforage.removeItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN);
+            queryClient.clear();
+
+            navigate('/auth/sign-in', { replace: true });
+          }}
+        >
+          Logout
+        </SPButton>
+      </div>
     </SPHeader>
   );
 }

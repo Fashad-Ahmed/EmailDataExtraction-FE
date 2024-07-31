@@ -18,10 +18,11 @@ import useGetApi from '@/hooks/useGetApi';
 
 export default function ProductManagement() {
   const { data: emailContentResponse, isLoading } = useGetApi<any>({
-    key: ['/public/email-content'],
-    url: `/public/email-content`,
+    key: ['email-content'],
+    url: `/email-content`,
   });
 
+  console.log({ emailContentResponse });
   const columns = [
     {
       title: 'ID',
@@ -78,7 +79,7 @@ export default function ProductManagement() {
   return (
     <Card heading="Products">
       <SPTable
-        dataSource={(emailContentResponse as any) ?? []}
+        dataSource={(emailContentResponse?.data as any) ?? []}
         columns={columns}
         rowKey={(record) => record?.id}
         loading={isLoading}

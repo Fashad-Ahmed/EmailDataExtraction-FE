@@ -48,16 +48,12 @@ export default function Login() {
             name={'login'}
             rules={[
               {
-                type: 'email',
-                message: 'The input is not valid email',
-              },
-              {
                 required: true,
-                message: 'Please enter your email',
+                message: 'Please enter your username',
               },
             ]}
-            placeholder="sam@example.com"
-            label="Email Address"
+            placeholder="Please enter your username"
+            label="Username"
           />
 
           <FormLabelInput.Password

@@ -6,3 +6,12 @@ export interface ICategory {
   sortingOrder: number;
   subCategories: string[];
 }
+
+export interface ICreateOrEditCategory {
+  name: string;
+  description: string;
+  isActive: boolean;
+  sortingOrder: number;
+  subCategoriesId: string[];
+  parentCategoryId: string;
+}

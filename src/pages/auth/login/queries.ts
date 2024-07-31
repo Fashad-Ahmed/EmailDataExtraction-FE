@@ -1,8 +1,8 @@
 import usePostApi from '@/hooks/usePostApi';
-// import { useBoundStore } from '@/store';
+import { useBoundStore } from '@/store';
 import { API_ROUTES } from '@/utils/constants/api-route.constant';
-// import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
-// import localforage from 'localforage';
+import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
+import localforage from 'localforage';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -15,22 +15,25 @@ import { useNavigate } from 'react-router-dom';
  */
 
 export function useSignIn() {
-  // const { setUser } = useBoundStore((state) => state);
+  const { setUser } = useBoundStore((state) => state);
   const navigate = useNavigate();
 
   const { mutateAsync: signIn, isPending } = usePostApi({
     url: API_ROUTES.auth.login,
     showErrorMessage: true,
     showSuccessMessage: true,
-    onSuccess: async (data) => {
+    onSuccess: async (data: any) => {
       console.log({ data });
-      //   await localforage.setItem(STORAGE_KEYS.AUTH.AUTH_TOKEN, data.accessToken);
-      //   await localforage.setItem(
-      //     STORAGE_KEYS.AUTH.REFRESH_TOKEN,
-      //     data.refreshToken
-      //   );
+      await localforage.setItem(
+        STORAGE_KEYS.AUTH.AUTH_TOKEN,
+        data?.accessToken
+      );
+      await localforage.setItem(
+        STORAGE_KEYS.AUTH.REFRESH_TOKEN,
+        data?.refreshToken
+      );
 
-      //   setUser?.(data.data);
+      setUser?.(data.data);
 
       navigate('/dashboard');
     },
