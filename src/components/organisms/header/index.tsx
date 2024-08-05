@@ -45,7 +45,7 @@ export default function Header() {
   const { mutateAsync } = usePostApi({
     url: `${APP_CONFIG.api.baseUrl}/email-content/extract`,
     showErrorMessage: true,
-    showSuccessMessage: true,
+    showSuccessMessage: false,
     onSuccess: (response) => {
       notification.success({
         message: response?.message || 'Success',
