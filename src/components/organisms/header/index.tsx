@@ -13,17 +13,19 @@ import { useQueryClient } from '@tanstack/react-query';
 import localforage from 'localforage';
 import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
 import { useNavigate } from 'react-router-dom';
+import usePostApi from '@/hooks/usePostApi';
+import { notification } from 'antd';
 // import { useEffect, useState } from 'react';
 
-interface IUserInfo {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
-  authuser: string;
-  hd: string;
-  prompt: string;
-}
+// interface IUserInfo {
+//   access_token: string;
+//   token_type: string;
+//   expires_in: number;
+//   scope: string;
+//   authuser: string;
+//   hd: string;
+//   prompt: string;
+// }
 
 /**
  * Header component for the application.
@@ -39,30 +41,54 @@ export default function Header() {
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  const { mutateAsync } = usePostApi({
+    url: `${APP_CONFIG.api.baseUrl}/email-content/extract`,
+    showErrorMessage: true,
+    showSuccessMessage: true,
+    onSuccess: (response) => {
+      notification.success({
+        message: response?.message || 'Success',
+      });
+    },
+  });
+
   const googleLogin = useGoogleLogin({
+    scope:
+      'https://mail.google.com/ https://www.googleapis.com/auth/gmail.modify',
     onSuccess: async (tokenResponse) => {
-      console.log({ tokenResponse });
-      const userInfoData: IUserInfo = await axios.get(
+      const userInfoData = await axios.get(
         'https://www.googleapis.com/oauth2/v3/userinfo',
-        // 'https://accounts.google.com/o/oauth2/iframerpc',
         {
           headers: { Authorization: 'Bearer ' + tokenResponse.access_token },
-          params: {
-            response_type: 'token',
-            login_hint: tokenResponse?.access_token,
-            client_id:
-              '1089634070694-b4tv7lvak2513v6kl2t6i92juaivkkaj.apps.googleusercontent.com',
-            origin: 'https://explorer.apis.google.com',
-            scope:
-              'https://mail.google.com/ https://www.googleapis.com/auth/gmail.modify',
-            ss_domain: 'https://explorer.apis.google.com',
-            include_granted_scopes: false,
-            auto: 1,
-          },
         }
       );
 
-      console.log({ userInfoData });
+      // const { data } = await axios.get(
+      //   'https://gmail.googleapis.com/gmail/v1/users/mukkarram@nassaunationalcable.com/messages',
+      //   // 'https://www.googleapis.com/gmail/v1/users/me/messages',
+      //   // 'https://www.googleapis.com/gmail/v1/users/me/labels',
+      //   // 'https://www.googleapis.com/oauth2/v3/userinfo',
+      //   // 'https://accounts.google.com/o/oauth2/iframerpc',
+      //   {
+      //     headers: { Authorization: 'Bearer ' + tokenResponse.access_token },
+
+      //     params: {
+      //       // response_type: 'token',
+      //       // login_hint: tokenResponse?.access_token,
+      //       // client_id:
+      //       //   '1089634070694-b4tv7lvak2513v6kl2t6i92juaivkkaj.apps.googleusercontent.com',
+      //       // origin: 'https://explorer.apis.google.com',
+      //       // scope:
+      //       //   'https://mail.google.com/ https://www.googleapis.com/auth/gmail.modify',
+      //       // ss_domain: 'https://explorer.apis.google.com',
+      //       // include_granted_scopes: false,
+      //       // auto: 1,
+      //     },
+      //   }
+      // );
+
+      // console.log({ data });
 
       // const tokenResponse = await axios.get(
       //   'https://accounts.google.com/o/oauth2/iframerpc',
@@ -84,27 +110,42 @@ export default function Header() {
       //   }
       // );
 
-      apiHit(tokenResponse as any);
+      // fetchEmails(tokenResponse?.access_token);
+      apiHit(tokenResponse as any, userInfoData?.data?.email);
     },
     onError: (errorResponse) => console.log(errorResponse),
   });
 
-  async function apiHit(tokenResponse: any) {
-    const accessToken = await localforage.getItem(STORAGE_KEYS.AUTH.AUTH_TOKEN);
-
-    fetch(
-      `${APP_CONFIG.api.baseUrl}/email-content/extract?accessToken=${tokenResponse?.access_token}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    ).then((response) => {
-      console.log({ response });
-      queryClient.invalidateQueries({ queryKey: ['email-content'] });
-    });
+  async function apiHit(tokenResponse: { access_token: any }, email: any) {
+    if (tokenResponse) {
+      mutateAsync({
+        accessToken: tokenResponse.access_token,
+        email: email,
+      });
+    } else {
+      console.error('Invalid tokenResponse');
+    }
   }
+
+  // async function fetchEmails(accessToken: string) {
+  //   const response = await fetch(
+  //     'https://slditr9z28.execute-api.us-east-2.amazonaws.com/default/gmailAPI',
+  //     {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ accessToken }),
+  //     }
+  //   );
+
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
+
+  //   const data = await response.json();
+  //   console.log(data); // Handle the fetched emails
+  // }
 
   return (
     <SPHeader
