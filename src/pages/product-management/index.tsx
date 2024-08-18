@@ -1,30 +1,23 @@
+import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 
-// import { RightArrowIcon } from '@/assets/svgs';
-import SPTable from '@/components/atoms/sp-table';
 import { IQuotation } from '@/types/quotations.type';
 import { QUERY_STRING } from '@/utils/constants/query.constant';
 import { formatDate } from '@/utils/helpers/general.helper';
+import { cn } from '@/utils/helpers/tailwind.helper';
+import { Form } from 'antd';
+
 import DashboardPage from '@/components/layouts/dashboard-page';
 import ControlBar from '@/components/molecules/control-bar';
 import useQuotation from './container/useQuotation';
 import useQueryString from '@/hooks/useQueryString';
-import { Form } from 'antd';
+import SPTable from '@/components/atoms/sp-table';
 import SelectSearch from '@/components/molecules/select-search';
 import SPButton from '@/components/atoms/sp-button';
 import FormLabelInput from '@/components/molecules/form-label-input';
-// import { Link } from 'react-router-dom';
-
-/**
- * ProductManagement component displays a table of products.
- * It fetches product data from the API using the useGetApi hook.
- * The table columns are defined and the data is rendered accordingly.
- * The component also includes a Card component as a wrapper.
- *
- * @returns {JSX.Element} - The ProductManagement component.
- */
 
 export default function ProductManagement() {
+  const navigate = useNavigate();
   const { setQuery, removeQuery } = useQueryString();
   const {
     debouncedSearch,
@@ -117,7 +110,19 @@ export default function ProductManagement() {
       <SPTable
         dataSource={emailContentResponse?.data ?? []}
         columns={columns}
-        rowKey={(record) => record?.id}
+        rowKey={(record: IQuotation) => record?.id}
+        onRow={(record: IQuotation) => {
+          return {
+            onClick: () => {
+              navigate(`/quotation/view/${record?.id}`, {
+                state: {
+                  data: record,
+                },
+              });
+            },
+            className: cn({ 'cursor-pointer': true }),
+          };
+        }}
         loading={isLoading}
         pagination={{
           total: emailContentResponse?.totalRecords,
