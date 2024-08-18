@@ -8,7 +8,11 @@ import {
   HomeOutlined,
   ProductFilled,
   ProductOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
 } from '@ant-design/icons';
+import { useState } from 'react';
+
 import SPMenu from '@/components/atoms/sp-menu';
 import SPSider from '@/components/atoms/sp-sider';
 import { NNC } from '@/assets/images';
@@ -23,6 +27,8 @@ import { NNC } from '@/assets/images';
 export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [collapsed, setCollapsed] = useState<boolean>(false);
 
   function openParent(key: string): string[] {
     switch (key) {
@@ -66,8 +72,11 @@ export default function Sidebar() {
       <SPSider
         width={'340'}
         theme="light"
-        collapsed={screen.availWidth < 800}
-        collapsedWidth={70}
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+        collapsedWidth={130}
+        trigger={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         className="h-screen overflow-hidden [&_.ant-menu-item-icon]:flex [&_.ant-menu-item-icon]:!w-5 [&_.ant-menu-item-icon]:justify-center [&_.ant-menu-item-selected]:!text-black [&_.ant-menu-item]:text-secondary"
       >
         <div className="flex h-16 items-center justify-center">
@@ -134,7 +143,7 @@ function getSidebarItems() {
     },
     {
       key: 'product-management',
-      label: 'Qoutations',
+      label: 'Quotation',
       icon: <HomeOutlined />,
     },
     {
