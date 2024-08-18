@@ -17,6 +17,7 @@ import CreateOrEditCategory from '@/pages/category-management/create-edit';
 import ViewCategoryDetail from '@/pages/category-management/view';
 import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
 import localforage from 'localforage';
+import ViewQuotation from '@/pages/product-management/view';
 
 type Routes = RouteObject & { isProtected?: boolean };
 
@@ -61,7 +62,10 @@ function getRoutes() {
       path: 'product-management',
       element: <ProductManagement />,
     },
-
+    {
+      path: 'quotation/view/:quotationId',
+      element: <ViewQuotation />,
+    },
     {
       path: 'products',
       element: <Products />,

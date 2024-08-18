@@ -2,9 +2,39 @@ import { RuleObject } from 'antd/es/form';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
+
 import { APP_CONFIG } from '../constants/app.constant';
+import {
+  DATE_FORMAT_6,
+  DATE_FORMAT_7,
+} from '@/constants/date-format.constants';
 
 type PDFDataType = 'base64' | 'binary';
+
+export const formatDate = (
+  _date: string | Date = '',
+  _format: string = DATE_FORMAT_6
+) => {
+  const new_date = new Date(_date);
+  return dayjs(new_date).format(_format);
+};
+
+export const formatDateWithDay = (
+  _date: string | Date = '',
+  _format: string = DATE_FORMAT_7
+) => {
+  const new_date = new Date(_date);
+  return dayjs(new_date).format(_format);
+};
+
+export const formatDateWithDayAfterYear = (
+  _date: string | Date = '',
+  years: number,
+  _format: string = DATE_FORMAT_7
+) => {
+  const new_date = dayjs(_date).add(years, 'year');
+  return new_date.format(_format);
+};
 
 export const formatCurrency = (value: number | bigint, locale = 'en-US') => {
   return new Intl.NumberFormat(locale, {
@@ -109,13 +139,6 @@ export function validateNumberGreaterThanValueRule(
     );
   }
   return Promise.resolve();
-}
-
-export function generateRequiredRule(text: string) {
-  return {
-    required: true,
-    message: text,
-  };
 }
 
 export const getPreviousHours = (hour: number) => {

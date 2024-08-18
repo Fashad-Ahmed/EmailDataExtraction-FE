@@ -14,7 +14,7 @@ export interface SelectSearchProps extends FormLabelInputSelectProps {
   url: string;
   enabled?: boolean;
   includeAllFields?: boolean;
-  labelKey: { join: string[] } | string[];
+  labelKey?: { join: string[] } | string[];
   valueKey?: string;
   showSkeleton?: boolean;
   controlled?: boolean;
@@ -70,12 +70,15 @@ const SelectSearch = ({
             .map((key) => item[key])
             .filter(Boolean)
             .join(' ');
+        } else if (!labelKey) {
+          // Handle single string key
+          label = item || '';
         }
 
         return {
           ...(includeAllFields ? item : {}),
           label,
-          value: item[valueKey],
+          value: !labelKey ? label : item[valueKey],
         };
       })
     : [];

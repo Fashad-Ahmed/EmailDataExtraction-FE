@@ -279,7 +279,7 @@ export default function Header() {
           className="flex max-w-[700px] flex-row items-center"
           onClick={googleLogin as any}
         >
-          <GoogleIcon />
+          <GoogleIcon className="h-5 w-5" />
           <SPLabel className="ml-2 text-base">Extract Data with Email</SPLabel>
         </SPButton>
       </div>

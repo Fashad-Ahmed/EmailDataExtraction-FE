@@ -37,7 +37,6 @@ export default function DetailCard({
   splitTextRightTextclassName,
   loading = false,
 }: DetailCardProps) {
-  console.log({ details });
   return (
     <SPContainer className={cn('flex flex-col gap-2.5', className)}>
       {title && (
