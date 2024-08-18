@@ -8,6 +8,10 @@ export const QUERY_STRING = {
     FILTERS: {
       DATE_FROM: '_dateFrom',
       DATE_TO: '_dateTo',
+      SUPPLIER_NAMES: '_supplierNames',
+      LOCATIONS: '_locations',
+      START_DATE: '_startDate',
+      END_DATE: '_endDate',
     },
   },
 };
