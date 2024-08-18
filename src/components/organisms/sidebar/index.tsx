@@ -25,7 +25,6 @@ export default function Sidebar() {
   const location = useLocation();
 
   function openParent(key: string): string[] {
-    console.log({ key });
     switch (key) {
       case 'property-managers':
         return ['company-management'];
@@ -135,7 +134,7 @@ function getSidebarItems() {
     },
     {
       key: 'product-management',
-      label: 'Product Management',
+      label: 'Qoutations',
       icon: <HomeOutlined />,
     },
     {

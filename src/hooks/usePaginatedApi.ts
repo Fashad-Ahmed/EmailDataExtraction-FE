@@ -16,11 +16,17 @@ interface Props {
 
 export interface PaginatedResponse<T> {
   data: T[];
-  count: number;
-  currentPage: number;
-  nextPage: number;
+  count?: number;
+  currentPage?: number;
+  nextPage?: number;
   lastPage?: number;
-  prevPage: number;
+  prevPage?: number;
+  // Need to re-shift it
+
+  pageSize?: number;
+  totalPages?: number;
+  pageNumber?: number;
+  totalRecords?: number;
 }
 
 function usePaginatedApi<T>({

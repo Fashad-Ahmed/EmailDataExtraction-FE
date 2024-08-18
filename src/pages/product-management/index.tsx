@@ -1,9 +1,15 @@
+import _ from 'lodash';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // import { RightArrowIcon } from '@/assets/svgs';
 import SPTable from '@/components/atoms/sp-table';
 import Card from '@/components/organisms/card';
 import useGetApi from '@/hooks/useGetApi';
+import { PaginatedResponse } from '@/hooks/usePaginatedApi';
+import useQueryString from '@/hooks/useQueryString';
+import { IQuotation } from '@/types/quotations.type';
+import { QUERY_STRING } from '@/utils/constants/query.constant';
+import { formatDate } from '@/utils/helpers/general.helper';
 // import { Link } from 'react-router-dom';
 // import { PaginatedResponse } from '@/hooks/usePaginatedApi';
 
@@ -17,60 +23,78 @@ import useGetApi from '@/hooks/useGetApi';
  */
 
 export default function ProductManagement() {
-  const { data: emailContentResponse, isLoading } = useGetApi<any>({
-    key: ['email-content'],
+  const { setQuery, getQuery } = useQueryString();
+
+  const pageNumber = getQuery(QUERY_STRING.PAGINATION.PAGE);
+
+  const { data: emailContentResponse, isLoading } = useGetApi<
+    PaginatedResponse<IQuotation>
+  >({
+    key: _.compact(['email-content', pageNumber]),
     url: `/email-content`,
+    query: {
+      ...(pageNumber && { pageNumber }),
+    },
   });
 
-  console.log({ emailContentResponse });
   const columns = [
     {
       title: 'ID',
-      render: (data: any) => {
+      render: (data: IQuotation) => {
         return <p>{data?.id ?? 'N/A'}</p>;
       },
     },
     {
       title: 'Product',
-      render: (data: any) => {
+      render: (data: IQuotation) => {
         return <p>{data?.product ?? 'N/A'}</p>;
       },
     },
     {
       title: 'Product Description',
-      render: (data: any) => {
+      render: (data: IQuotation) => {
         return <p>{data?.productDescription ?? 'N/A'}</p>;
       },
     },
 
     {
       title: 'Availability',
-      render: (data: any) => {
+      render: (data: IQuotation) => {
         return <p>{data?.availability ?? 'N/A'}</p>;
       },
     },
     {
       title: 'Available Quantity',
-      render: (data: any) => {
+      render: (data: IQuotation) => {
         return <p>{data?.availableQuantity ?? 'N/A'}</p>;
       },
     },
 
     {
       title: 'Unit Price',
-      render: (data: any) => {
+      render: (data: IQuotation) => {
         return <p>{data?.unitPrice ?? 'N/A'}</p>;
       },
     },
     {
       title: 'Supplier Name',
-      render: (data: any) => {
+      render: (data: IQuotation) => {
         return <p>{data?.supplierName ?? 'N/A'}</p>;
       },
     },
     {
+      title: 'Email Received',
+      render: (data: IQuotation) => {
+        return (
+          <p>
+            {data?.emailReceivedAt ? formatDate(data?.emailReceivedAt) : 'N/A'}
+          </p>
+        );
+      },
+    },
+    {
       title: 'Location',
-      render: (data: any) => {
+      render: (data: IQuotation) => {
         return <p>{data?.location ?? 'N/A'}</p>;
       },
     },
@@ -83,20 +107,18 @@ export default function ProductManagement() {
         columns={columns}
         rowKey={(record) => record?.id}
         loading={isLoading}
-        pagination={
-          {
-            // total: count,
-          }
-        }
+        pagination={{
+          total: emailContentResponse?.totalRecords,
+        }}
         scroll={{ x: 300 }}
-        // onChange={(page) =>
-        //   setQuery({
-        //     [QUERY_STRING.PAGINATION.PAGE]: page.current?.toString() ?? '1',
-        //   })
-        // }
+        onChange={(page) =>
+          setQuery({
+            [QUERY_STRING.PAGINATION.PAGE]: page.current?.toString() ?? '1',
+          })
+        }
         footer={() => (
           <p className="text-gray-400">
-            Total {emailContentResponse?.length ?? 0} Items
+            Total {emailContentResponse?.totalRecords ?? 0} Items
           </p>
         )}
       />
