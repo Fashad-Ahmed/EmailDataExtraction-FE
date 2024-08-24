@@ -15,6 +15,10 @@ export const API_ROUTES = {
     productById: '/product/',
     createOrRead: '/product',
   },
+  supplier: {
+    supplierById: '/supplier/',
+    createOrRead: '/supplier',
+  },
 };
 
 Object.seal(API_ROUTES);

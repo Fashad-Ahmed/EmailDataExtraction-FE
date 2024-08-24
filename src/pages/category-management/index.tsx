@@ -3,9 +3,6 @@
 import { Link } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 
-// import { RightArrowIcon } from '@/assets/svgs';
-// import { productCategoryData } from '@/data/category';
-
 import SPTable from '@/components/atoms/sp-table';
 import DashboardPage from '@/components/layouts/dashboard-page';
 import SPButton from '@/components/atoms/sp-button';
@@ -13,7 +10,6 @@ import useGetApi from '@/hooks/useGetApi';
 import { API_ROUTES } from '@/utils/constants/api-route.constant';
 import useQueryString from '@/hooks/useQueryString';
 import { QUERY_STRING } from '@/utils/constants/query.constant';
-// import { PaginatedResponse } from '@/hooks/usePaginatedApi';
 
 export default function CategoryManagement() {
   const { setQuery } = useQueryString();
@@ -21,8 +17,6 @@ export default function CategoryManagement() {
     key: [['category']],
     url: API_ROUTES.productCategory.createOrRead,
   });
-
-  console.log({ categoryResponse });
 
   return (
     <DashboardPage
