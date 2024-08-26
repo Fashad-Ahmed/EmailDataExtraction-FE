@@ -1,26 +1,61 @@
-import { useForm, useWatch } from 'antd/es/form/Form';
+import { Form } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { AxiosMethodEnum } from '@/utils/enums/general.enum';
 import { API_ROUTES } from '@/utils/constants/api-route.constant';
 import usePostApi from '@/hooks/usePostApi';
 import useGetApi from '@/hooks/useGetApi';
+import useGetSupplierDetail from './useGetSupplierDetail';
+import { useEffect } from 'react';
+
+const initialValue = {
+  name: '',
+  details: '',
+  emails: [
+    {
+      emailType: '',
+      email: '',
+    },
+  ],
+  phones: [
+    {
+      phoneType: '',
+      phone: '',
+    },
+  ],
+  addresses: [
+    {
+      addressLine1: '',
+      addressLine2: '',
+      addressLine3: '',
+      addressLine4: '',
+      zipCode: '',
+      zipCodeExt: '',
+      countryId: '',
+      stateId: '',
+      cityId: '',
+      county: '',
+    },
+  ],
+};
 
 export default function useCreateOrEditSupplier(supplierId?: string | null) {
-  const [form] = useForm();
+  const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const selectedCountry = useWatch('countryId', form);
-  const selectedState = useWatch('stateId', form);
+  const { supplierDetails } = useGetSupplierDetail(supplierId);
+
+  const selectedCountry = Form.useWatch(['addresses', '0', 'countryId'], form);
+  const selectedState = Form.useWatch(['addresses', '0', 'stateId'], form);
 
   const {
     mutateAsync: createOrEditSupplier,
     isPending: createOrEditSupplierLoading,
   } = usePostApi({
     url: supplierId
-      ? `${API_ROUTES.supplier.createOrRead}${supplierId}`
+      ? `${API_ROUTES.supplier.createOrRead}/${supplierId}`
       : API_ROUTES.supplier.createOrRead,
     invalidate: [['supplier']],
-    method: supplierId ? AxiosMethodEnum.PATCH : AxiosMethodEnum.POST,
+    method: supplierId ? AxiosMethodEnum.PUT : AxiosMethodEnum.POST,
     showSuccessMessage: true,
     showErrorMessage: true,
     onSuccess: () =>
@@ -73,12 +108,59 @@ export default function useCreateOrEditSupplier(supplierId?: string | null) {
     enabled: Boolean(selectedCountry) && Boolean(selectedState),
   });
 
+  useEffect(() => {
+    if (supplierId) {
+      form.setFieldsValue({
+        name: supplierDetails?.name,
+        details: supplierDetails?.details,
+        emails: supplierDetails?.emails ?? [
+          {
+            emailType: '',
+            email: '',
+          },
+        ],
+        phones: supplierDetails?.phones ?? [
+          {
+            phoneType: '',
+            phone: '',
+          },
+        ],
+        addresses: supplierDetails?.addresses
+          ? supplierDetails?.addresses.map((i) => ({
+              addressLine1: i?.addressLine1,
+              addressLine2: i?.addressLine2,
+              addressLine3: i?.addressLine3,
+              addressLine4: i?.addressLine4,
+              zipCode: i?.zipCode,
+              zipCodeExt: i?.zipCodeExt,
+              countryId: i?.country?.id,
+              stateId: i?.state?.id,
+              cityId: i?.city?.id,
+              county: i?.county,
+            }))
+          : [
+              {
+                addressLine1: '',
+                addressLine2: '',
+                addressLine3: '',
+                addressLine4: '',
+                zipCode: '',
+                zipCodeExt: '',
+                countryId: '',
+                stateId: '',
+                cityId: '',
+                county: '',
+              },
+            ],
+      });
+      return;
+    }
+
+    form.setFieldsValue(initialValue);
+  }, []);
+
   function onSubmit(values: any) {
-    const payload = {
-      county: '222_countttttyyyy',
-      ...values,
-    };
-    createOrEditSupplier(payload);
+    createOrEditSupplier(values);
   }
 
   function onCancel() {

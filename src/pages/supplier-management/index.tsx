@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 
@@ -12,8 +12,10 @@ import { API_ROUTES } from '@/utils/constants/api-route.constant';
 import { PaginatedResponse } from '@/hooks/usePaginatedApi';
 import { ISupplier } from '@/types/supplier.type';
 import { QUERY_STRING } from '@/utils/constants/query.constant';
+import { cn } from '@/utils/helpers/tailwind.helper';
 
 export default function SupplierManagement() {
+  const navigate = useNavigate();
   const { setQuery, getQuery } = useQueryString();
 
   const pageNumber = getQuery(QUERY_STRING.PAGINATION.PAGE) ?? 1;
@@ -51,6 +53,14 @@ export default function SupplierManagement() {
           total: supplierResponse?.totalRecords,
         }}
         scroll={{ x: 300 }}
+        onRow={(record: ISupplier) => {
+          return {
+            onClick: () => {
+              navigate(`/supplier-management/view/${record?.id}`);
+            },
+            className: cn({ 'cursor-pointer': true }),
+          };
+        }}
         onChange={(page) =>
           setQuery({
             [QUERY_STRING.PAGINATION.PAGE]: page.current?.toString() ?? '1',
@@ -85,6 +95,12 @@ const columns = [
     title: 'Details',
     render: (data: ISupplier) => {
       return <p>{data?.details ?? 'N/A'}</p>;
+    },
+  },
+  {
+    title: 'Primary Email Address',
+    render: (data: ISupplier) => {
+      return <p>{data?.emails?.[0]?.email ?? 'N/A'}</p>;
     },
   },
   {
