@@ -9,11 +9,16 @@ import useCreateOrEditSupplier from './containers/useCreateOrEditSupplier';
 import FormLabelInput from '@/components/molecules/form-label-input';
 import {
   descriptionValidationRules,
+  emailTypeValidationRule,
+  emailValidationRule,
   nameValidationRules,
+  phoneTypeValidationRule,
+  phoneValidationRule,
 } from '@/validations/supplier';
 import IconButton from '@/components/molecules/icon-button';
 import { DeleteIcon, PlusHighligtedIcon } from '@/assets/svgs';
 import _ from 'lodash';
+import SPHeading from '@/components/atoms/sp-heading';
 
 export default function CreateOrEditSupplier() {
   const params = useParams();
@@ -32,12 +37,11 @@ export default function CreateOrEditSupplier() {
     countryData,
     countryDataLoading,
     stateData,
-    stateDataLoading,
     cityData,
-    cityDataLoading,
     selectedCountry,
     selectedState,
-  } = useCreateOrEditSupplier();
+    cityDataLoading,
+  } = useCreateOrEditSupplier(supplierId);
 
   return (
     <DashboardPage
@@ -51,6 +55,8 @@ export default function CreateOrEditSupplier() {
         scrollToFirstError={{ behavior: 'smooth' }}
       >
         <SPContainer className={'grid grid-cols-1 gap-5'}>
+          <SPHeading variant="md">Basic Information</SPHeading>
+
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormLabelInput
               name={'name'}
@@ -67,7 +73,7 @@ export default function CreateOrEditSupplier() {
             />
           </div>
           {/* Emails */}
-          <Form.List name={['emails']} initialValue={[{}]}>
+          <Form.List name={['emails']}>
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
@@ -78,6 +84,7 @@ export default function CreateOrEditSupplier() {
                         placeholder="Select Email Type"
                         label="Type"
                         loading={emailTypesLoading}
+                        rules={emailTypeValidationRule}
                         options={
                           emailTypes?.map((item) => ({
                             label: item,
@@ -89,6 +96,7 @@ export default function CreateOrEditSupplier() {
                         name={[name, 'email']}
                         label="Email"
                         placeholder="Enter Email"
+                        rules={emailValidationRule}
                       />
                     </div>
                     {fields?.length > 1 && (
@@ -120,8 +128,9 @@ export default function CreateOrEditSupplier() {
           </Form.List>
 
           {/* Phone Numbers */}
+          <SPHeading variant="md">Contact Information</SPHeading>
 
-          <Form.List name={['phones']} initialValue={[{}]}>
+          <Form.List name={['phones']}>
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
@@ -132,6 +141,7 @@ export default function CreateOrEditSupplier() {
                         placeholder="Select Phone Type"
                         label="Type"
                         loading={phoneTypesLoading}
+                        rules={phoneTypeValidationRule}
                         options={
                           phoneTypes?.map((item) => ({
                             label: item,
@@ -143,6 +153,7 @@ export default function CreateOrEditSupplier() {
                         name={[name, 'number']}
                         label="Contact Number"
                         placeholder="Enter Contact Number"
+                        rules={phoneValidationRule}
                       />
                     </div>
                     {fields?.length > 1 && (
@@ -176,7 +187,8 @@ export default function CreateOrEditSupplier() {
 
           {/* Addresses */}
 
-          <Form.List name={['addresses']} initialValue={[{}]}>
+          <SPHeading variant="md">Location Information</SPHeading>
+          <Form.List name={['addresses']}>
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
@@ -214,6 +226,60 @@ export default function CreateOrEditSupplier() {
                         label="Zip Code Extension"
                         placeholder="Enter zip code extension"
                       />
+
+                      <FormLabelInput.Select
+                        name={[name, 'countryId']}
+                        placeholder="Select Country"
+                        label="Country"
+                        loading={countryDataLoading}
+                        disabled={countryDataLoading}
+                        options={
+                          countryData?.map((item: any) => ({
+                            label: item?.name ?? item?.currencyCode,
+                            value: item?.id,
+                          })) ?? []
+                        }
+                      />
+
+                      <FormLabelInput.Select
+                        name={[name, 'stateId']}
+                        placeholder="Select State"
+                        label="State"
+                        options={
+                          stateData?.map((item: any) => ({
+                            label: item?.name ?? item?.code,
+                            value: item?.id,
+                          })) ?? []
+                        }
+                        loading={countryDataLoading}
+                        disabled={
+                          Boolean(!selectedCountry) || countryDataLoading
+                        }
+                      />
+
+                      <FormLabelInput.Select
+                        name={[name, 'cityId']}
+                        placeholder="Select City"
+                        label="City"
+                        options={
+                          cityData?.map((item: any) => ({
+                            label: item?.name ?? item?.code,
+                            value: item?.id,
+                          })) ?? []
+                        }
+                        loading={cityDataLoading}
+                        disabled={
+                          (Boolean(!selectedCountry) &&
+                            Boolean(!selectedState)) ||
+                          cityDataLoading
+                        }
+                      />
+
+                      <FormLabelInput
+                        name={[name, 'county']}
+                        label="County"
+                        placeholder="Enter County"
+                      />
                     </div>
                     {fields?.length > 1 && (
                       <IconButton
@@ -243,50 +309,6 @@ export default function CreateOrEditSupplier() {
             )}
           </Form.List>
 
-          <div className="flex flex-1">
-            <div className="mt-4 grid w-full grid-cols-2 gap-4">
-              <FormLabelInput.Select
-                name={'countryId'}
-                placeholder="Select Country"
-                label="Country"
-                loading={countryDataLoading}
-                options={
-                  countryData?.map((item: any) => ({
-                    label: item?.name ?? item?.currencyCode,
-                    value: item?.id,
-                  })) ?? []
-                }
-              />
-
-              <FormLabelInput.Select
-                name={'stateId'}
-                placeholder="Select State"
-                label="State"
-                loading={stateDataLoading}
-                options={
-                  stateData?.map((item: any) => ({
-                    label: item?.name ?? item?.code,
-                    value: item?.id,
-                  })) ?? []
-                }
-                disabled={Boolean(!selectedCountry)}
-              />
-
-              <FormLabelInput.Select
-                name={'cityId'}
-                placeholder="Select City"
-                label="City"
-                loading={cityDataLoading}
-                options={
-                  cityData?.map((item: any) => ({
-                    label: item?.name ?? item?.code,
-                    value: item?.id,
-                  })) ?? []
-                }
-                disabled={Boolean(!selectedCountry) && Boolean(!selectedState)}
-              />
-            </div>
-          </div>
           <div className="my-4 flex items-end justify-end">
             <div className="flex flex-1 gap-4 md:flex-initial  md:items-center md:justify-center">
               <ActionButton onClick={onCancel}>

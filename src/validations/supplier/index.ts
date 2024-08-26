@@ -15,4 +15,19 @@ const descriptionValidationRules = [
   ),
 ];
 
-export { nameValidationRules, descriptionValidationRules };
+const emailTypeValidationRule = [createRequiredRule('Email Type is required')];
+const emailValidationRule = [createRequiredRule('Email is required')];
+
+const phoneTypeValidationRule = [
+  createRequiredRule('Contact Type is required'),
+];
+const phoneValidationRule = [createRequiredRule('Contact Number is required')];
+
+export {
+  nameValidationRules,
+  descriptionValidationRules,
+  emailTypeValidationRule,
+  emailValidationRule,
+  phoneTypeValidationRule,
+  phoneValidationRule,
+};
