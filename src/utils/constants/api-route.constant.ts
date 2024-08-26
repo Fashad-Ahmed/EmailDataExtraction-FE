@@ -15,6 +15,20 @@ export const API_ROUTES = {
     productById: '/product/',
     createOrRead: '/product',
   },
+  supplier: {
+    supplierById: '/supplier/',
+    createOrRead: '/supplier',
+  },
+  enums: {
+    phoneType: '/enum/phone-type',
+    emailType: '/enum/email-type',
+  },
+  country: {
+    country: '/country',
+  },
+  area: {
+    area: '/geographical-area',
+  },
 };
 
 Object.seal(API_ROUTES);

@@ -15,4 +15,12 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
-}
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 10000,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+    },
+  },
+};

@@ -1,5 +1,5 @@
-// import localforage from 'localforage';
 import { redirect, RouteObject } from 'react-router-dom';
+import localforage from 'localforage';
 
 // import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
 
@@ -16,8 +16,13 @@ import CategoryManagement from '@/pages/category-management';
 import CreateOrEditCategory from '@/pages/category-management/create-edit';
 import ViewCategoryDetail from '@/pages/category-management/view';
 import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
-import localforage from 'localforage';
 import ViewQuotation from '@/pages/product-management/view';
+// import LocationManagement from '@/pages/location-management';
+// import CreateOrEditLocation from '@/pages/location-management/create-edit';
+// import ViewLocation from '@/pages/location-management/view';
+import SupplierManagement from '@/pages/supplier-management';
+import CreateOrEditSupplier from '@/pages/supplier-management/create-edit';
+import ViewSupplier from '@/pages/supplier-management/view';
 
 type Routes = RouteObject & { isProtected?: boolean };
 
@@ -91,6 +96,31 @@ function getRoutes() {
     {
       path: 'category-management/view/:categoryId',
       element: <ViewCategoryDetail />,
+    },
+
+    // {
+    //   path: 'location-management',
+    //   element: <LocationManagement />,
+    // },
+    // {
+    //   path: 'location-management/create/:locationId?',
+    //   element: <CreateOrEditLocation />,
+    // },
+    // {
+    //   path: 'location-management/view/:locationId',
+    //   element: <ViewLocation />,
+    // },
+    {
+      path: 'supplier-management',
+      element: <SupplierManagement />,
+    },
+    {
+      path: 'supplier-management/create/:supplierId?',
+      element: <CreateOrEditSupplier />,
+    },
+    {
+      path: 'supplier-management/view/:supplierId',
+      element: <ViewSupplier />,
     },
   ];
 }
