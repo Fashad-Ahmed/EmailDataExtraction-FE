@@ -10,7 +10,7 @@ import {
   ProductOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  HeatMapOutlined,
+  // HeatMapOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';
@@ -158,11 +158,11 @@ function getSidebarItems() {
       label: 'Products',
       icon: <ProductOutlined />,
     },
-    {
-      key: 'location-management',
-      label: 'Location',
-      icon: <HeatMapOutlined />,
-    },
+    // {
+    //   key: 'location-management',
+    //   label: 'Location',
+    //   icon: <HeatMapOutlined />,
+    // },
     {
       key: 'supplier-management',
       label: 'Supplier',

@@ -7,6 +7,7 @@ export default function useCreateOrEditLocationContainer(
   const [form] = useForm();
   const navigate = useNavigate();
 
+  console.log({ locationId });
   function onCancel() {
     navigate(-1);
   }

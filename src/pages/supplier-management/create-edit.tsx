@@ -13,13 +13,31 @@ import {
 } from '@/validations/supplier';
 import IconButton from '@/components/molecules/icon-button';
 import { DeleteIcon, PlusHighligtedIcon } from '@/assets/svgs';
+import _ from 'lodash';
 
 export default function CreateOrEditSupplier() {
   const params = useParams();
 
   const { supplierId = null } = params;
 
-  const { form, onCancel } = useCreateOrEditSupplier();
+  const {
+    form,
+    onCancel,
+    onSubmit,
+    createOrEditSupplierLoading,
+    emailTypes,
+    emailTypesLoading,
+    phoneTypes,
+    phoneTypesLoading,
+    countryData,
+    countryDataLoading,
+    stateData,
+    stateDataLoading,
+    cityData,
+    cityDataLoading,
+    selectedCountry,
+    selectedState,
+  } = useCreateOrEditSupplier();
 
   return (
     <DashboardPage
@@ -29,7 +47,7 @@ export default function CreateOrEditSupplier() {
     >
       <Form
         form={form}
-        // onFinish={onSubmit}
+        onFinish={onSubmit}
         scrollToFirstError={{ behavior: 'smooth' }}
       >
         <SPContainer className={'grid grid-cols-1 gap-5'}>
@@ -48,6 +66,7 @@ export default function CreateOrEditSupplier() {
               placeholder="Details"
             />
           </div>
+          {/* Emails */}
           <Form.List name={['emails']} initialValue={[{}]}>
             {(fields, { add, remove }) => (
               <>
@@ -55,20 +74,21 @@ export default function CreateOrEditSupplier() {
                   <div className="flex flex-1" key={key}>
                     <div className="mt-4 grid w-full grid-cols-2 gap-4">
                       <FormLabelInput.Select
-                        name={[name, 'codeType']}
-                        label="Type Of Code"
-                        placeholder="Select type"
+                        name={[name, 'emailType']}
+                        placeholder="Select Email Type"
+                        label="Type"
+                        loading={emailTypesLoading}
+                        options={
+                          emailTypes?.map((item) => ({
+                            label: item,
+                            value: item,
+                          })) ?? []
+                        }
                       />
                       <FormLabelInput
-                        name={[name, 'code']}
-                        label="Code"
-                        placeholder="Enter Code"
-                      />
-                      <FormLabelInput
-                        name={[name, 'details']}
-                        className="col-span-1"
-                        label="Details (Optional)"
-                        placeholder="Enter Details..."
+                        name={[name, 'email']}
+                        label="Email"
+                        placeholder="Enter Email"
                       />
                     </div>
                     {fields?.length > 1 && (
@@ -82,22 +102,205 @@ export default function CreateOrEditSupplier() {
                     )}
                   </div>
                 ))}
-                <IconButton
-                  onClick={() => add()}
-                  type="text"
-                  className={'mt-2 justify-end gap-1 pl-2 text-sp_gray'}
-                  icon={<PlusHighligtedIcon className="text-primary" />}
+                <div
+                  className={
+                    'mt-2 flex flex-row-reverse gap-1 pl-2 text-sp_gray'
+                  }
                 >
-                  Add Another
-                </IconButton>
+                  <IconButton
+                    onClick={() => add()}
+                    type="text"
+                    icon={<PlusHighligtedIcon className="text-primary" />}
+                  >
+                    Add Another
+                  </IconButton>
+                </div>
               </>
             )}
           </Form.List>
 
+          {/* Phone Numbers */}
+
+          <Form.List name={['phones']} initialValue={[{}]}>
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name }) => (
+                  <div className="flex flex-1" key={key}>
+                    <div className="mt-4 grid w-full grid-cols-2 gap-4">
+                      <FormLabelInput.Select
+                        name={[name, 'phoneType']}
+                        placeholder="Select Phone Type"
+                        label="Type"
+                        loading={phoneTypesLoading}
+                        options={
+                          phoneTypes?.map((item) => ({
+                            label: item,
+                            value: item,
+                          })) ?? []
+                        }
+                      />
+                      <FormLabelInput
+                        name={[name, 'number']}
+                        label="Contact Number"
+                        placeholder="Enter Contact Number"
+                      />
+                    </div>
+                    {fields?.length > 1 && (
+                      <IconButton
+                        onClick={() => remove(name)}
+                        type="text"
+                        className={`mt-4 h-fit min-w-0 px-2`}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </div>
+                ))}
+
+                <div
+                  className={
+                    'mt-2 flex flex-row-reverse gap-1 pl-2 text-sp_gray'
+                  }
+                >
+                  <IconButton
+                    onClick={() => add()}
+                    type="text"
+                    icon={<PlusHighligtedIcon className="text-primary" />}
+                  >
+                    Add Another
+                  </IconButton>
+                </div>
+              </>
+            )}
+          </Form.List>
+
+          {/* Addresses */}
+
+          <Form.List name={['addresses']} initialValue={[{}]}>
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name }) => (
+                  <div className="flex flex-1" key={key}>
+                    <div className="mt-4 grid w-full grid-cols-2 gap-4">
+                      <FormLabelInput
+                        name={[name, 'addressLine1']}
+                        label="Address Line One"
+                        placeholder="Enter address line"
+                      />
+
+                      <FormLabelInput
+                        name={[name, 'addressLine2']}
+                        label="Address Line Two"
+                        placeholder="Enter address line"
+                      />
+                      <FormLabelInput
+                        name={[name, 'addressLine3']}
+                        label="Address Line Three"
+                        placeholder="Enter address line"
+                      />
+                      <FormLabelInput
+                        name={[name, 'addressLine4']}
+                        label="Address Line Four"
+                        placeholder="Enter address line"
+                      />
+
+                      <FormLabelInput
+                        name={[name, 'zipCode']}
+                        label="Zip Code"
+                        placeholder="Enter zip code"
+                      />
+                      <FormLabelInput
+                        name={[name, 'zipCodeExt']}
+                        label="Zip Code Extension"
+                        placeholder="Enter zip code extension"
+                      />
+                    </div>
+                    {fields?.length > 1 && (
+                      <IconButton
+                        onClick={() => remove(name)}
+                        type="text"
+                        className={`mt-4 h-fit min-w-0 px-2`}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </div>
+                ))}
+                <div
+                  className={
+                    'mt-2 flex flex-row-reverse gap-1 pl-2 text-sp_gray'
+                  }
+                >
+                  <IconButton
+                    onClick={() => add()}
+                    type="text"
+                    icon={<PlusHighligtedIcon className="text-primary" />}
+                  >
+                    Add Another
+                  </IconButton>
+                </div>
+              </>
+            )}
+          </Form.List>
+
+          <div className="flex flex-1">
+            <div className="mt-4 grid w-full grid-cols-2 gap-4">
+              <FormLabelInput.Select
+                name={'countryId'}
+                placeholder="Select Country"
+                label="Country"
+                loading={countryDataLoading}
+                options={
+                  countryData?.map((item: any) => ({
+                    label: item?.name ?? item?.currencyCode,
+                    value: item?.id,
+                  })) ?? []
+                }
+              />
+
+              <FormLabelInput.Select
+                name={'stateId'}
+                placeholder="Select State"
+                label="State"
+                loading={stateDataLoading}
+                options={
+                  stateData?.map((item: any) => ({
+                    label: item?.name ?? item?.code,
+                    value: item?.id,
+                  })) ?? []
+                }
+                disabled={Boolean(!selectedCountry)}
+              />
+
+              <FormLabelInput.Select
+                name={'cityId'}
+                placeholder="Select City"
+                label="City"
+                loading={cityDataLoading}
+                options={
+                  cityData?.map((item: any) => ({
+                    label: item?.name ?? item?.code,
+                    value: item?.id,
+                  })) ?? []
+                }
+                disabled={Boolean(!selectedCountry) && Boolean(!selectedState)}
+              />
+            </div>
+          </div>
           <div className="my-4 flex items-end justify-end">
             <div className="flex flex-1 gap-4 md:flex-initial  md:items-center md:justify-center">
               <ActionButton onClick={onCancel}>
                 <SPLabel className="font-bold">Cancel</SPLabel>
+              </ActionButton>
+
+              <ActionButton
+                loading={createOrEditSupplierLoading}
+                htmlType="submit"
+                type="primary"
+              >
+                <SPLabel className="font-bold">
+                  {!supplierId ? 'Create' : 'Update'}
+                </SPLabel>
               </ActionButton>
             </div>
           </div>

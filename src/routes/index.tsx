@@ -17,9 +17,9 @@ import CreateOrEditCategory from '@/pages/category-management/create-edit';
 import ViewCategoryDetail from '@/pages/category-management/view';
 import { STORAGE_KEYS } from '@/utils/constants/storage.constant';
 import ViewQuotation from '@/pages/product-management/view';
-import LocationManagement from '@/pages/location-management';
-import CreateOrEditLocation from '@/pages/location-management/create-edit';
-import ViewLocation from '@/pages/location-management/view';
+// import LocationManagement from '@/pages/location-management';
+// import CreateOrEditLocation from '@/pages/location-management/create-edit';
+// import ViewLocation from '@/pages/location-management/view';
 import SupplierManagement from '@/pages/supplier-management';
 import CreateOrEditSupplier from '@/pages/supplier-management/create-edit';
 import ViewSupplier from '@/pages/supplier-management/view';
@@ -98,18 +98,18 @@ function getRoutes() {
       element: <ViewCategoryDetail />,
     },
 
-    {
-      path: 'location-management',
-      element: <LocationManagement />,
-    },
-    {
-      path: 'location-management/create/:locationId?',
-      element: <CreateOrEditLocation />,
-    },
-    {
-      path: 'location-management/view/:locationId',
-      element: <ViewLocation />,
-    },
+    // {
+    //   path: 'location-management',
+    //   element: <LocationManagement />,
+    // },
+    // {
+    //   path: 'location-management/create/:locationId?',
+    //   element: <CreateOrEditLocation />,
+    // },
+    // {
+    //   path: 'location-management/view/:locationId',
+    //   element: <ViewLocation />,
+    // },
     {
       path: 'supplier-management',
       element: <SupplierManagement />,
