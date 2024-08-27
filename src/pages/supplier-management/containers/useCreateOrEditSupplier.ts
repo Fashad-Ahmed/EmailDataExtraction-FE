@@ -51,11 +51,9 @@ export default function useCreateOrEditSupplier(supplierId?: string | null) {
     mutateAsync: createOrEditSupplier,
     isPending: createOrEditSupplierLoading,
   } = usePostApi({
-    url: supplierId
-      ? `${API_ROUTES.supplier.createOrRead}/${supplierId}`
-      : API_ROUTES.supplier.createOrRead,
+    url: API_ROUTES.supplier.createOrRead, // Always use the same URL
     invalidate: [['supplier']],
-    method: supplierId ? AxiosMethodEnum.PUT : AxiosMethodEnum.POST,
+    method: AxiosMethodEnum.POST, // Ensure the method is POST
     showSuccessMessage: true,
     showErrorMessage: true,
     onSuccess: () =>
@@ -66,23 +64,17 @@ export default function useCreateOrEditSupplier(supplierId?: string | null) {
       ),
   });
 
-  const { data: emailTypes, isPending: emailTypesLoading } = useGetApi<
-    string[]
-  >({
+  const { data: emailTypes, isPending: emailTypesLoading } = useGetApi<string[]>({
     key: [['enum', 'email-type']],
     url: `${API_ROUTES.enums.emailType}`,
   });
 
-  const { data: phoneTypes, isPending: phoneTypesLoading } = useGetApi<
-    string[]
-  >({
+  const { data: phoneTypes, isPending: phoneTypesLoading } = useGetApi<string[]>({
     key: [['enum', 'phone-type']],
     url: `${API_ROUTES.enums.phoneType}`,
   });
 
-  const { data: countryData, isPending: countryDataLoading } = useGetApi<
-    string[]
-  >({
+  const { data: countryData, isPending: countryDataLoading } = useGetApi<string[]>({
     key: [['country']],
     url: `${API_ROUTES.country.country}`,
   });
@@ -157,11 +149,20 @@ export default function useCreateOrEditSupplier(supplierId?: string | null) {
     }
 
     form.setFieldsValue(initialValue);
-  }, []);
+  }, [supplierId, supplierDetails, form]);
 
   function onSubmit(values: any) {
-    createOrEditSupplier(values);
+    // Clone the values to avoid mutating the original form data
+    const payload = { ...values };
+  
+    // If supplierId exists, add it to the payload
+    if (supplierId) {
+      payload.id = supplierId; // Append the supplierId to the payload
+    }
+  
+    createOrEditSupplier(payload);
   }
+  
 
   function onCancel() {
     navigate(-1);
