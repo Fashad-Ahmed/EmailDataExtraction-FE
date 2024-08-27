@@ -64,17 +64,23 @@ export default function useCreateOrEditSupplier(supplierId?: string | null) {
       ),
   });
 
-  const { data: emailTypes, isPending: emailTypesLoading } = useGetApi<string[]>({
+  const { data: emailTypes, isPending: emailTypesLoading } = useGetApi<
+    string[]
+  >({
     key: [['enum', 'email-type']],
     url: `${API_ROUTES.enums.emailType}`,
   });
 
-  const { data: phoneTypes, isPending: phoneTypesLoading } = useGetApi<string[]>({
+  const { data: phoneTypes, isPending: phoneTypesLoading } = useGetApi<
+    string[]
+  >({
     key: [['enum', 'phone-type']],
     url: `${API_ROUTES.enums.phoneType}`,
   });
 
-  const { data: countryData, isPending: countryDataLoading } = useGetApi<string[]>({
+  const { data: countryData, isPending: countryDataLoading } = useGetApi<
+    string[]
+  >({
     key: [['country']],
     url: `${API_ROUTES.country.country}`,
   });
@@ -154,15 +160,14 @@ export default function useCreateOrEditSupplier(supplierId?: string | null) {
   function onSubmit(values: any) {
     // Clone the values to avoid mutating the original form data
     const payload = { ...values };
-  
+
     // If supplierId exists, add it to the payload
     if (supplierId) {
       payload.id = supplierId; // Append the supplierId to the payload
     }
-  
+
     createOrEditSupplier(payload);
   }
-  
 
   function onCancel() {
     navigate(-1);
