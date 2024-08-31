@@ -12,15 +12,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Check for System Updates
-        uses: apt-get update && apt-get install -y rsync
+        run: apt-get update && apt-get install -y rsync
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
-          node-version: 20
+          node-version: 16
 
       - name: Install dependencies
         run: yarn install --production
