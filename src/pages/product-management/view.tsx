@@ -14,7 +14,7 @@ export default function ViewQuotation() {
       <DetailCard
         horizontal
         details={{
-          product: data?.product,
+          // product: data?.product,
           supplierName: data?.supplierName,
           availableQuantity: data?.availableQuantity ?? 'N/A',
           createdAt: formatDate(data?.createdAt) ?? 'N/A',
@@ -22,7 +22,7 @@ export default function ViewQuotation() {
           location: data?.location ?? 'N/A',
           quotation: data?.quotation,
           unitPrice: data?.unitPrice ?? 'N/A',
-          description: data?.productDescription,
+          // description: data?.productDescription,
         }}
       />
     </DashboardPage>
