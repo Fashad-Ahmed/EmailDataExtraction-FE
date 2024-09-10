@@ -2,7 +2,7 @@ name: NNC Admin Panel ERP
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   # pull_request:
   #   branches: [ "release-development" ]
 

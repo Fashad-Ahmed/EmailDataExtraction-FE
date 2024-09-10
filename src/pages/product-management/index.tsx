@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Form } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 
 import { IQuotation } from '@/types/quotations.type';
 import { QUERY_STRING } from '@/utils/constants/query.constant';
 import { formatDate } from '@/utils/helpers/general.helper';
-import { cn } from '@/utils/helpers/tailwind.helper';
-import { Form } from 'antd';
 
 import DashboardPage from '@/components/layouts/dashboard-page';
 import ControlBar from '@/components/molecules/control-bar';
@@ -15,6 +16,8 @@ import SPTable from '@/components/atoms/sp-table';
 import SelectSearch from '@/components/molecules/select-search';
 import SPButton from '@/components/atoms/sp-button';
 import FormLabelInput from '@/components/molecules/form-label-input';
+import QuotedProductsMenu from './components/QuotedProductsMenu';
+import { RightArrowIcon } from '@/assets/svgs';
 
 export default function ProductManagement() {
   const navigate = useNavigate();
@@ -29,6 +32,100 @@ export default function ProductManagement() {
     supplierNames,
     locations,
   } = useQuotation();
+
+  const columns = [
+    {
+      title: 'ID',
+      render: (data: IQuotation) => {
+        return <p>{data?.id ?? 'N/A'}</p>;
+      },
+    },
+    {
+      title: 'Quotation',
+      render: (data: IQuotation) => {
+        return <p>{data?.quotation ?? 'N/A'}</p>;
+      },
+    },
+    // {
+    //   title: 'Product Description',
+    //   render: (data: IQuotation) => {
+    //     return <p>{data?.productDescription ?? 'N/A'}</p>;
+    //   },
+    // },
+
+    // {
+    //   title: 'Availability',
+    //   render: (data: IQuotation) => {
+    //     return <p>{data?.availability ?? 'N/A'}</p>;
+    //   },
+    // },
+    // {
+    //   title: 'Available Quantity',
+    //   render: (data: IQuotation) => {
+    //     return <p>{data?.availableQuantity ?? 'N/A'}</p>;
+    //   },
+    // },
+
+    // {
+    //   title: 'Unit Price',
+    //   render: (data: IQuotation) => {
+    //     return <p>{data?.unitPrice ?? 'N/A'}</p>;
+    //   },
+    // },
+    {
+      title: 'Supplier Name',
+      render: (data: IQuotation) => {
+        return <p>{data?.supplierName ?? 'N/A'}</p>;
+      },
+    },
+    {
+      title: 'Location',
+      render: (data: IQuotation) => {
+        return <p>{data?.location ?? 'N/A'}</p>;
+      },
+    },
+    {
+      title: 'Email Received',
+      render: (data: IQuotation) => {
+        return (
+          <p>
+            {data?.emailReceivedAt ? formatDate(data?.emailReceivedAt) : 'N/A'}
+          </p>
+        );
+      },
+    },
+    {
+      title: 'Location',
+      render: (data: IQuotation) => {
+        return <p>{data?.location ?? 'N/A'}</p>;
+      },
+    },
+
+    {
+      title: '',
+      render: (data: IQuotation) => (
+        <QuotedProductsMenu quotationId={data?.id} />
+      ),
+    },
+
+    {
+      title: '',
+      render: (data: IQuotation) => (
+        <div
+          className="cursor-pointer"
+          onClick={() => {
+            navigate(`/quotation/view/${data?.id}`, {
+              state: {
+                data: data,
+              },
+            });
+          }}
+        >
+          <RightArrowIcon className="h-6 w-6" />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <DashboardPage heading={'Quotations'} className="space-y-3">
@@ -48,8 +145,8 @@ export default function ProductManagement() {
             name="supplierNames"
             key={_.uniqueId('supplier_names')}
             defaultValue={supplierNames}
-            url="/email-content/all-available-suppliers"
-            queryKey={['email-content', 'all-available-suppliers']}
+            url="/quotation/all-available-suppliers"
+            queryKey={['quotation', 'all-available-suppliers']}
             label=""
             placeholder="Supplier Names"
             allowClear
@@ -66,8 +163,8 @@ export default function ProductManagement() {
             name="locations"
             key={_.uniqueId('supplier_names')}
             defaultValue={locations}
-            url="/email-content/all-available-locations"
-            queryKey={['email-content', 'all-available-locations']}
+            url="/quotation/all-available-locations"
+            queryKey={['quotation', 'all-available-locations']}
             label=""
             placeholder="Locations"
             allowClear
@@ -109,20 +206,20 @@ export default function ProductManagement() {
 
       <SPTable
         dataSource={emailContentResponse?.data ?? []}
-        columns={columns}
+        columns={columns as any}
         rowKey={(record: IQuotation) => record?.id}
-        onRow={(record: IQuotation) => {
-          return {
-            onClick: () => {
-              navigate(`/quotation/view/${record?.id}`, {
-                state: {
-                  data: record,
-                },
-              });
-            },
-            className: cn({ 'cursor-pointer': true }),
-          };
-        }}
+        // onRow={(record: IQuotation) => {
+        //   return {
+        //     onClick: () => {
+        //       navigate(`/quotation/view/${record?.id}`, {
+        //         state: {
+        //           data: record,
+        //         },
+        //       });
+        //     },
+        //     className: cn({ 'cursor-pointer': true }),
+        //   };
+        // }}
         loading={isLoading}
         pagination={{
           total: emailContentResponse?.totalRecords,
@@ -142,66 +239,3 @@ export default function ProductManagement() {
     </DashboardPage>
   );
 }
-
-const columns = [
-  {
-    title: 'ID',
-    render: (data: IQuotation) => {
-      return <p>{data?.id ?? 'N/A'}</p>;
-    },
-  },
-  {
-    title: 'Product',
-    render: (data: IQuotation) => {
-      return <p>{data?.product ?? 'N/A'}</p>;
-    },
-  },
-  {
-    title: 'Product Description',
-    render: (data: IQuotation) => {
-      return <p>{data?.productDescription ?? 'N/A'}</p>;
-    },
-  },
-
-  {
-    title: 'Availability',
-    render: (data: IQuotation) => {
-      return <p>{data?.availability ?? 'N/A'}</p>;
-    },
-  },
-  {
-    title: 'Available Quantity',
-    render: (data: IQuotation) => {
-      return <p>{data?.availableQuantity ?? 'N/A'}</p>;
-    },
-  },
-
-  {
-    title: 'Unit Price',
-    render: (data: IQuotation) => {
-      return <p>{data?.unitPrice ?? 'N/A'}</p>;
-    },
-  },
-  {
-    title: 'Supplier Name',
-    render: (data: IQuotation) => {
-      return <p>{data?.supplierName ?? 'N/A'}</p>;
-    },
-  },
-  {
-    title: 'Email Received',
-    render: (data: IQuotation) => {
-      return (
-        <p>
-          {data?.emailReceivedAt ? formatDate(data?.emailReceivedAt) : 'N/A'}
-        </p>
-      );
-    },
-  },
-  {
-    title: 'Location',
-    render: (data: IQuotation) => {
-      return <p>{data?.location ?? 'N/A'}</p>;
-    },
-  },
-];

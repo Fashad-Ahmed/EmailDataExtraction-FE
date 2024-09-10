@@ -8,7 +8,11 @@ import { IQuotation } from '@/types/quotations.type';
 import { QUERY_STRING } from '@/utils/constants/query.constant';
 
 interface IFormValues {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   supplierNames: string[] | any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   locations: string[] | any;
   startDate: Date | undefined;
   endDate: Date | undefined;
@@ -31,7 +35,7 @@ export default function useQuotation() {
     PaginatedResponse<IQuotation>
   >({
     key: _.compact([
-      'email-content',
+      'quotation',
       pageNumber,
       keyword,
       supplierNames,
@@ -39,7 +43,7 @@ export default function useQuotation() {
       startDate,
       endDate,
     ]),
-    url: `/email-content`,
+    url: `/quotation`,
     query: {
       pageSize: 10,
       sortProperties: 'emailReceivedAt',
