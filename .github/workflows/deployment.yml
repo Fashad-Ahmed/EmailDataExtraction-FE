@@ -2,7 +2,7 @@ name: NNC Admin Panel ERP
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
   # pull_request:
   #   branches: [ "release-development" ]
 
@@ -15,12 +15,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check for System Updates
-        run: apt-get update && apt-get install -y rsync
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rsync
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: '20'
 
       - name: Install dependencies
         run: yarn install --production
@@ -36,16 +38,13 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          ACL: 'public-read'
-          LOCAL_PATH: 'dist'
-          EXTRA_ARGS: "--exclude '.well-known/*'"
         run: |
-            aws s3 sync ./dist s3://$AWS_S3_BUCKET --delete
+          aws s3 sync ./dist s3://$AWS_S3_BUCKET --delete --acl public-read --exclude '.well-known/*'
+
       - name: Invalidate CloudFront Cache
         env:
           DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-            aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
-        
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
