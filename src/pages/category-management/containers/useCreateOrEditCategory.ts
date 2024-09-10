@@ -43,7 +43,7 @@ export default function useCreateOrEditCategory(categoryId?: string | null) {
         subCategoriesId: categoryDetails?.subCategories,
       });
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onSubmit(values: ICreateOrEditCategory) {
     createOrEditCategory({ ...values, isActive: true });

@@ -22,6 +22,7 @@ export function useSignIn() {
     url: API_ROUTES.auth.login,
     showErrorMessage: true,
     showSuccessMessage: true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: async (data: any) => {
       console.log({ data });
       await localforage.setItem(
