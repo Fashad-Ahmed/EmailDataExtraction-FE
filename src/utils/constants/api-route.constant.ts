@@ -8,8 +8,8 @@ export const API_ROUTES = {
     createOrRead: '/product-category',
   },
   emailContent: {
-    extractEmailData: '/email-content',
-    extractAllEmails: '/email-content/extract',
+    extractEmailData: '/quotation',
+    extractAllEmails: '/quotation/extract',
   },
   products: {
     productById: '/product/',

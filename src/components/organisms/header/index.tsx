@@ -43,7 +43,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const { mutateAsync } = usePostApi({
-    url: `${APP_CONFIG.api.baseUrl}/email-content/extract`,
+    url: `${APP_CONFIG.api.baseUrl}/quotation/extract`,
     showErrorMessage: true,
     showSuccessMessage: false,
     onSuccess: (response) => {
