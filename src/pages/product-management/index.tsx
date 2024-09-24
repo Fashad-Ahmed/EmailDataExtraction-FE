@@ -104,7 +104,7 @@ export default function ProductManagement() {
     {
       title: '',
       render: (data: IQuotation) => (
-        <QuotedProductsMenu quotationId={data?.id} />
+        <QuotedProductsMenu quotationId={data?.id} location={data?.location} />
       ),
     },
 

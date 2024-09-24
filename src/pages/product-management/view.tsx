@@ -21,7 +21,6 @@ export default function ViewQuotation() {
           emailReceivedAt: formatDate(data?.emailReceivedAt) ?? 'N/A',
           location: data?.location ?? 'N/A',
           quotation: data?.quotation,
-          unitPrice: data?.unitPrice ?? 'N/A',
           // description: data?.productDescription,
         }}
       />
