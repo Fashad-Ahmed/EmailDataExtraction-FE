@@ -27,5 +27,5 @@ export interface IQuotationDetails {
   isFreightPermitted: boolean;
   message: string;
   userEmail: string;
-  quotedProducts: any[];
+  quotedProducts: IQuotation[];
 }
