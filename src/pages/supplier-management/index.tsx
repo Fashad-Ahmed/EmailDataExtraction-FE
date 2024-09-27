@@ -13,6 +13,7 @@ import { PaginatedResponse } from '@/hooks/usePaginatedApi';
 import { ISupplier } from '@/types/supplier.type';
 import { QUERY_STRING } from '@/utils/constants/query.constant';
 import { cn } from '@/utils/helpers/tailwind.helper';
+import { openLinkInNewTab } from '@/utils/helpers/general.helper';
 
 export default function SupplierManagement() {
   const navigate = useNavigate();
@@ -93,20 +94,52 @@ const columns = [
 
   {
     title: 'Details',
+    width: 300,
     render: (data: ISupplier) => {
-      return <p>{data?.details ?? 'N/A'}</p>;
+      return <p className="text-wrap">{data?.details ?? 'N/A'}</p>;
     },
   },
   {
-    title: 'Primary Email Address',
+    title: 'Phone Number',
     render: (data: ISupplier) => {
-      return <p>{data?.emails?.[0]?.email ?? 'N/A'}</p>;
+      return <p>{data?.phoneNumber ?? 'N/A'}</p>;
     },
   },
   {
-    title: 'Number of Addresses',
+    title: 'Toll Free Number',
     render: (data: ISupplier) => {
-      return <p>{data?.addresses.length ?? 'N/A'}</p>;
+      return <p>{data?.tollFreeNumber ?? 'N/A'}</p>;
+    },
+  },
+
+  {
+    title: 'Fax',
+    render: (data: ISupplier) => {
+      return <p>{data?.fax ?? 'N/A'}</p>;
+    },
+  },
+
+  {
+    title: 'Website',
+    onCell: () => {
+      return {
+        onClick: (event: { stopPropagation: () => void }) => {
+          event.stopPropagation();
+        },
+      };
+    },
+    render: (data: ISupplier) => {
+      return (
+        <div
+          onClick={() => {
+            if (data?.website) {
+              openLinkInNewTab(data?.website);
+            }
+          }}
+        >
+          {data?.website ?? 'N/A'}
+        </div>
+      );
     },
   },
 ];

@@ -147,7 +147,8 @@ export const getPreviousHours = (hour: number) => {
 
 export function openLinkInNewTab(url?: string): void {
   if (url) {
-    window.open(url, '_blank');
+    console.log({ url });
+    window.open(`https://${url}`, '_blank')?.focus();
   }
 }
 

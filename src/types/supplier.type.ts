@@ -5,6 +5,46 @@ export interface ISupplier {
   emails: Email[];
   phones: Phone[];
   addresses: Address[];
+  phoneNumber: string;
+  fax: string;
+  website: string;
+  tollFreeNumber: string;
+  quotations: Quotation[];
+}
+
+export interface Quotation {
+  id: number;
+  quotedBy: string;
+  quotedTo: string;
+  quotation: string;
+  supplierName: string;
+  location: string;
+  termsAndConditions: string;
+  createdAt: string;
+  emailReceivedAt: string;
+  isFreightPermitted: string;
+  message: string;
+  quotedProducts: QuotedProduct[];
+  supplier: string;
+}
+
+export interface QuotedProduct {
+  id: number;
+  product: string;
+  productDescription: string;
+  availability: string;
+  availableQuantity: string;
+  unitPrice: string;
+  isFreightPermitted: string;
+  details: Detail[];
+}
+
+export interface Detail {
+  id: number;
+  productDetails: string;
+  unitPrice: string;
+  quotedDate: string;
+  supplier: string;
 }
 
 export interface Address {
