@@ -11,7 +11,12 @@ import SPHeading from '@/components/atoms/sp-heading';
 import SPContainer from '@/components/atoms/sp-container';
 import { Collapse } from 'antd';
 import SPAccordion from '@/components/atoms/sp-accordian';
-import { ISupplier } from '@/types/supplier.type';
+import { ISupplier, Quotation } from '@/types/supplier.type';
+import { useRef, useState } from 'react';
+import SPLabel from '@/components/atoms/sp-label';
+import QuotationsProductDetailsModal from './components/Modals/QuotationsProductDetailsModal';
+
+const { Panel } = Collapse;
 
 export default function ViewSupplier() {
   const params = useParams();
@@ -22,7 +27,6 @@ export default function ViewSupplier() {
   const { supplierDetails, supplierDetailsLoading } =
     useGetSupplierDetail(supplierId);
 
-  console.log(supplierDetails?.quotations);
   return (
     <DashboardPage
       heading="Supplier Information"
@@ -57,9 +61,7 @@ export default function ViewSupplier() {
             if (!websiteUrl) return <div>N/A</div>;
             return (
               <div
-                className={cn(
-                  'cursor-pointer hover:font-bold hover:text-primary'
-                )}
+                className={cn('cursor-pointer hover:text-primary')}
                 onClick={() => {
                   openLinkInNewTab(websiteUrl);
                 }}
@@ -106,44 +108,78 @@ export default function ViewSupplier() {
   );
 }
 
-const { Panel } = Collapse;
-
 const QuotationAccordion = ({
   quotations,
 }: {
   quotations?: ISupplier['quotations'];
 }) => {
-  console.log({ quotations });
+  const currentQuotationIdRef = useRef<string | null>(null);
+  const currentQuotationRef = useRef<Quotation['quotedProducts'] | null>(null);
+  const [previewModal, setPreviewModal] = useState<boolean>(false);
+
+  function handlePreviewModal() {
+    setPreviewModal((prev) => !prev);
+  }
   return (
-    <SPAccordion>
-      {quotations &&
-        quotations?.map((quotation, index) => (
-          <Panel header={`Quotation #${index + 1}:`} key={quotation?.id}>
-            <DetailCard
-              horizontal
-              details={{
-                id: quotation?.id?.toString() ?? 'N/A',
-                quotation: quotation?.quotation ?? 'N/A',
-                quotedBy: quotation?.quotedBy ?? 'N/A',
-                quotedTo: quotation?.quotedTo ?? 'N/A',
-                supplierName: quotation?.supplierName ?? 'N/A',
-                emailReceivedAt: quotation?.emailReceivedAt
-                  ? formatDate(quotation?.emailReceivedAt)
-                  : 'N/A',
-                location: quotation?.location?.toString() ?? 'N/A',
-                isFreightPermitted: String(
-                  quotation?.isFreightPermitted ?? 'N/A'
-                ),
-                products:
-                  quotation?.quotedProducts?.length > 0
-                    ? quotation?.quotedProducts
-                        .map((i) => `${i?.product} `)
-                        .join(', ')
+    <>
+      <SPAccordion>
+        {quotations &&
+          quotations?.map((quotation, index) => (
+            <Panel
+              header={`Quotation # ${quotation?.quotation ?? index + 1}:`}
+              key={quotation?.id}
+            >
+              <DetailCard
+                horizontal
+                details={{
+                  id: quotation?.id?.toString() ?? 'N/A',
+                  quotedBy: quotation?.quotedBy ?? 'N/A',
+                  quotedTo: quotation?.quotedTo ?? 'N/A',
+                  supplierName: quotation?.supplierName ?? 'N/A',
+                  emailReceivedAt: quotation?.emailReceivedAt
+                    ? formatDate(quotation?.emailReceivedAt)
                     : 'N/A',
-              }}
-            />
-          </Panel>
-        ))}
-    </SPAccordion>
+                  location: quotation?.location?.toString() ?? 'N/A',
+
+                  // products:
+                  //   quotation?.quotedProducts?.length > 0
+                  //     ? quotation?.quotedProducts
+                  //         .map((i) => `${i?.product} `)
+                  //         .join(', ')
+                  //     : 'N/A',
+                  products: () => (
+                    <SPLabel
+                      onClick={() => {
+                        currentQuotationIdRef.current =
+                          quotation?.quotation ?? '';
+
+                        currentQuotationRef.current =
+                          quotation?.quotedProducts?.length > 0
+                            ? quotation?.quotedProducts
+                            : [];
+
+                        handlePreviewModal();
+                      }}
+                      className="cursor-pointer text-tealv1 underline hover:text-primary"
+                    >
+                      View Quoted Products
+                    </SPLabel>
+                  ),
+                  isFreightPermitted: String(
+                    quotation?.isFreightPermitted ?? 'N/A'
+                  ),
+                }}
+              />
+            </Panel>
+          ))}
+      </SPAccordion>
+
+      <QuotationsProductDetailsModal
+        open={previewModal}
+        onCancel={handlePreviewModal}
+        products={currentQuotationRef.current}
+        quotationId={currentQuotationIdRef.current}
+      />
+    </>
   );
 };
