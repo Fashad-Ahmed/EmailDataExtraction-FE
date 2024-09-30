@@ -17,7 +17,6 @@ import SelectSearch from '@/components/molecules/select-search';
 import SPButton from '@/components/atoms/sp-button';
 import FormLabelInput from '@/components/molecules/form-label-input';
 import QuotedProductsMenu from './components/QuotedProductsMenu';
-import { RightArrowIcon } from '@/assets/svgs';
 
 export default function ProductManagement() {
   const navigate = useNavigate();
@@ -103,26 +102,15 @@ export default function ProductManagement() {
 
     {
       title: '',
+      onCell: () => {
+        return {
+          onClick: (event: { stopPropagation: () => void }) => {
+            event.stopPropagation();
+          },
+        };
+      },
       render: (data: IQuotation) => (
         <QuotedProductsMenu quotationId={data?.id} location={data?.location} />
-      ),
-    },
-
-    {
-      title: '',
-      render: (data: IQuotation) => (
-        <div
-          className="cursor-pointer"
-          onClick={() => {
-            navigate(`/quotation/view/${data?.id}`, {
-              state: {
-                data: data,
-              },
-            });
-          }}
-        >
-          <RightArrowIcon className="h-6 w-6" />
-        </div>
       ),
     },
   ];
@@ -208,18 +196,18 @@ export default function ProductManagement() {
         dataSource={emailContentResponse?.data ?? []}
         columns={columns as any}
         rowKey={(record: IQuotation) => record?.id}
-        // onRow={(record: IQuotation) => {
-        //   return {
-        //     onClick: () => {
-        //       navigate(`/quotation/view/${record?.id}`, {
-        //         state: {
-        //           data: record,
-        //         },
-        //       });
-        //     },
-        //     className: cn({ 'cursor-pointer': true }),
-        //   };
-        // }}
+        onRow={(record: IQuotation) => {
+          return {
+            onClick: () => {
+              navigate(`/quotation/view/${record?.id}`, {
+                state: {
+                  data: record,
+                },
+              });
+            },
+            className: 'cursor-pointer',
+          };
+        }}
         loading={isLoading}
         pagination={{
           total: emailContentResponse?.totalRecords,

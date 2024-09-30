@@ -62,7 +62,7 @@ export default function QuotedProductsMenu({
     {
       title: 'Freight Permitted',
       render: (data: any) => {
-        return <p>{Boolean(data?.isFreightPermitted) ?? 'N/A'}</p>;
+        return <p>{data?.isFreightPermitted ?? 'N/A'}</p>;
       },
     },
   ];
